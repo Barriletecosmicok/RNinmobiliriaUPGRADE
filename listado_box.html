@@ -3,10 +3,9 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>RN Inmobiliaria — Propiedades en venta en Posadas, Misiones</title>
-  <meta name="description" content="Encontrá o vendé tu propiedad en Posadas, Misiones. Casas, departamentos, terrenos y locales comerciales.">
+  <title>Propiedades en formato tarjetas — RN Inmobiliaria</title>
+  <meta name="description" content="Catálogo completo de propiedades en venta en Posadas, Misiones, en formato de tarjetas.">
 
-  <!-- Tipografías -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Zilla+Slab:wght@400;500;600;700&family=Public+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -20,7 +19,6 @@
     <div class="header-inner">
       <a href="index.html" class="logo">RN <span>Inmobiliaria</span></a>
 
-      <!-- Checkbox hack: menú mobile sin JavaScript -->
       <input type="checkbox" id="menu-toggle" class="menu-toggle-input">
       <label for="menu-toggle" class="menu-toggle-btn" aria-label="Abrir menú de navegación">
         <span></span><span></span><span></span>
@@ -28,8 +26,8 @@
 
       <nav class="main-nav" aria-label="Navegación principal">
         <ul>
-          <li><a href="index.html" class="active">Inicio</a></li>
-          <li><a href="listado_box.html">Propiedades</a></li>
+          <li><a href="index.html">Inicio</a></li>
+          <li><a href="listado_box.html" class="active">Propiedades</a></li>
           <li><a href="listado_tabla.html">Listado</a></li>
           <li class="nav-comprar"><a href="comprar.html" class="btn btn-outline">Comprar</a></li>
         </ul>
@@ -39,26 +37,24 @@
 
   <main>
 
-    <!-- ===================== HERO ===================== -->
-    <section class="hero">
-      <div class="hero-content">
-        <h1>Tu futuro hogar en la tierra roja</h1>
-        <p>Encontrá tu próxima propiedad en Posadas con el respaldo de una inmobiliaria que conoce cada barrio de la ciudad.</p>
-        <div class="hero-actions">
-          <a href="listado_box.html" class="btn btn-primary">Ver propiedades</a>
-          <a href="https://wa.me/5493764170186?text=Hola%20RN%20Inmobiliaria.%20Estoy%20interesado%20en%20sus%20servicios.%20Me%20gustar%C3%ADa%20saber%20m%C3%A1s." target="_blank" rel="noopener" class="btn btn-outline-light">Hablemos por WhatsApp</a>
-        </div>
+    <!-- ===================== BANNER ===================== -->
+    <section class="page-banner">
+      <div class="page-banner-inner">
+        <p class="breadcrumb"><a href="index.html">Inicio</a> / Propiedades</p>
+        <h1>Todas las propiedades</h1>
+        <p>Explorá el catálogo completo en formato de tarjetas, con fotos y datos clave de cada propiedad.</p>
       </div>
     </section>
 
-    <!-- ===================== PROPIEDADES DESTACADAS ===================== -->
-    <section class="propiedades-destacadas" id="propiedades">
-      <div class="section-header">
-        <div>
-          <h2>Propiedades destacadas</h2>
-          <p>Últimas oportunidades ingresadas a nuestro catálogo.</p>
-        </div>
-        <a href="listado_box.html" class="ver-todas">Ver todas las propiedades</a>
+    <!-- ===================== CATÁLOGO EN BOX ===================== -->
+    <section class="catalogo">
+
+      <div class="filtros">
+        <span class="filtro-chip activo">Todos</span>
+        <span class="filtro-chip">Casas</span>
+        <span class="filtro-chip">Terrenos</span>
+        <span class="filtro-chip">Departamentos</span>
+        <span class="filtro-chip">Locales comerciales</span>
       </div>
 
       <div class="grid-propiedades">
@@ -132,88 +128,6 @@
         </article>
 
       </div>
-    </section>
-
-    <!-- ===================== SERVICIOS ===================== -->
-    <section class="servicios">
-      <div class="section-header section-header--center">
-        <h2>Qué hacemos</h2>
-        <p>Gestión integral para quienes buscan comprar o vender.</p>
-      </div>
-
-      <div class="grid-servicios">
-        <article class="card-servicio">
-          <h3>Venta de Propiedades</h3>
-          <ul>
-            <li>Catálogo digital actualizado</li>
-            <li>Difusión en redes</li>
-            <li>Asesoramiento legal</li>
-            <li>Cierre de operaciones</li>
-          </ul>
-        </article>
-
-        <article class="card-servicio">
-          <h3>Administración de Alquileres</h3>
-          <ul>
-            <li>Redacción de contratos</li>
-            <li>Cobro mensual</li>
-            <li>Ajustes automáticos (ICL/IPC)</li>
-            <li>Resolución de conflictos</li>
-          </ul>
-        </article>
-
-        <article class="card-servicio">
-          <h3>Tasaciones Profesionales</h3>
-          <ul>
-            <li>Análisis de mercado local</li>
-            <li>Visita presencial</li>
-            <li>Entrega de informe</li>
-            <li>Precio real garantizado</li>
-          </ul>
-        </article>
-      </div>
-    </section>
-
-    <!-- ===================== NOSOTROS ===================== -->
-    <section class="nosotros">
-      <div class="nosotros-texto">
-        <h2>Construimos relaciones, no solo ventas</h2>
-        <p>RN Inmobiliaria nació con la visión de profesionalizar el sector inmobiliario en Misiones. Hoy ayudamos a familias y empresas a encontrar su lugar ideal, cuidando su patrimonio con total transparencia.</p>
-      </div>
-
-      <div class="nosotros-valores">
-        <div class="valor">
-          <h3>Nuestra misión</h3>
-          <p>Brindar soluciones inmobiliarias ágiles y seguras, protegiendo los intereses de nuestros clientes en cada paso del proceso.</p>
-        </div>
-        <div class="valor">
-          <h3>Nuestra visión</h3>
-          <p>Ser la inmobiliaria referente de Misiones, destacándonos por la innovación tecnológica y la calidad humana.</p>
-        </div>
-      </div>
-    </section>
-
-    <!-- ===================== CONTACTO ===================== -->
-    <section class="contacto" id="contacto">
-      <div class="contacto-info">
-        <h2>¿Listo para dar el siguiente paso?</h2>
-        <p>Dejanos tus datos o escribinos directo por WhatsApp. Estamos listos para asesorarte sin compromiso.</p>
-        <p><strong>Oficina:</strong> Posadas, Misiones (con cita previa)</p>
-        <p><strong>WhatsApp:</strong> +54 9 376 417-0186</p>
-      </div>
-
-      <form class="contacto-form" action="#" method="get">
-        <label for="nombre">Nombre completo</label>
-        <input type="text" id="nombre" name="nombre" required>
-
-        <label for="email">Email</label>
-        <input type="email" id="email" name="email" required>
-
-        <label for="mensaje">Mensaje</label>
-        <textarea id="mensaje" name="mensaje" rows="4" required></textarea>
-
-        <button type="submit" class="btn btn-primary">Enviar mensaje</button>
-      </form>
     </section>
 
   </main>

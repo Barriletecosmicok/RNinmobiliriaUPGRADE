@@ -85,6 +85,7 @@ section {
 a:focus-visible,
 button:focus-visible,
 input:focus-visible,
+select:focus-visible,
 textarea:focus-visible {
   outline: 3px solid var(--color-ocre);
   outline-offset: 2px;
@@ -104,9 +105,15 @@ textarea:focus-visible {
   border-radius: var(--radius);
   font-weight: 600;
   font-family: var(--font-body);
+  font-size: 1rem;
   border: 2px solid transparent;
   cursor: pointer;
   transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.btn-sm {
+  padding: 0.4rem 0.9rem;
+  font-size: 0.8125rem;
 }
 
 .btn-primary {
@@ -135,6 +142,12 @@ textarea:focus-visible {
 .btn-outline-light:hover {
   background-color: white;
   color: var(--color-selva);
+}
+
+.btn-block {
+  display: block;
+  width: 100%;
+  text-align: center;
 }
 
 /* =========================================================
@@ -178,11 +191,18 @@ textarea:focus-visible {
   color: var(--color-ocre);
 }
 
-.nav-login .btn-outline {
+.main-nav a.active {
+  color: var(--color-ocre);
+  border-bottom: 2px solid var(--color-ocre);
+  padding-bottom: 2px;
+}
+
+.nav-comprar .btn-outline {
   border-color: white;
   color: white;
+  padding: 0.5rem 1.25rem;
 }
-.nav-login .btn-outline:hover {
+.nav-comprar .btn-outline:hover {
   background-color: white;
   color: var(--color-selva);
 }
@@ -230,6 +250,44 @@ textarea:focus-visible {
 }
 
 /* =========================================================
+   PAGE BANNER — Encabezado reutilizable para páginas internas
+   ========================================================= */
+.page-banner {
+  background-color: var(--color-selva);
+  padding: var(--space-lg) var(--space-md);
+}
+
+.page-banner-inner {
+  max-width: var(--max-width);
+  margin: 0 auto;
+}
+
+.breadcrumb {
+  color: var(--color-arena);
+  font-size: 0.8125rem;
+  margin-bottom: var(--space-xs);
+  opacity: 0.8;
+}
+
+.breadcrumb a {
+  color: var(--color-arena);
+  font-weight: 600;
+}
+.breadcrumb a:hover {
+  color: var(--color-ocre);
+}
+
+.page-banner h1 {
+  color: white;
+  font-size: 2.25rem;
+}
+
+.page-banner p {
+  color: var(--color-arena);
+  margin-top: var(--space-xs);
+}
+
+/* =========================================================
    SECCIÓN: encabezados de sección (reutilizable)
    ========================================================= */
 .section-header {
@@ -262,9 +320,37 @@ textarea:focus-visible {
 }
 
 /* =========================================================
-   PROPIEDADES DESTACADAS — Grid (se acomoda solo según ancho)
+   FILTROS — Chips visuales (catálogo box)
    ========================================================= */
-.propiedades-destacadas {
+.filtros {
+  max-width: var(--max-width);
+  margin: 0 auto var(--space-md) auto;
+  display: flex;
+  gap: var(--space-xs);
+  flex-wrap: wrap;
+}
+
+.filtro-chip {
+  padding: 0.5rem 1.1rem;
+  border-radius: 999px;
+  border: 1px solid var(--color-borde);
+  background-color: var(--color-papel);
+  color: var(--color-musgo);
+  font-size: 0.875rem;
+  font-weight: 600;
+}
+
+.filtro-chip.activo {
+  background-color: var(--color-selva);
+  border-color: var(--color-selva);
+  color: white;
+}
+
+/* =========================================================
+   PROPIEDADES DESTACADAS / CATÁLOGO — Grid (se acomoda solo según ancho)
+   ========================================================= */
+.propiedades-destacadas,
+.catalogo {
   max-width: var(--max-width);
   margin: 0 auto;
 }
@@ -283,11 +369,6 @@ textarea:focus-visible {
   overflow: hidden;
   display: flex;
   flex-direction: column;
-}
-
-.card-imagen {
-  aspect-ratio: 4 / 3;
-  background-color: var(--color-borde);
 }
 
 /* Galería deslizable dentro de la tarjeta (scroll-snap, sin JavaScript) */
@@ -342,6 +423,11 @@ textarea:focus-visible {
   border-radius: 999px;
 }
 
+.badge-tabla {
+  position: static;
+  display: inline-block;
+}
+
 .btn-favorito {
   position: absolute;
   top: var(--space-sm);
@@ -361,6 +447,7 @@ textarea:focus-visible {
   display: flex;
   flex-direction: column;
   gap: 0.25rem;
+  flex-grow: 1;
 }
 
 .card-ubicacion {
@@ -382,6 +469,205 @@ textarea:focus-visible {
   font-size: 0.875rem;
   color: var(--color-musgo);
   margin-top: 0.25rem;
+}
+
+.card-ver-ficha {
+  margin-top: var(--space-sm);
+  align-self: flex-start;
+}
+
+/* =========================================================
+   TABLA DE PROPIEDADES — listado_tabla.html
+   ========================================================= */
+.tabla-wrapper {
+  max-width: var(--max-width);
+  margin: 0 auto;
+  overflow-x: auto;
+  border: 1px solid var(--color-borde);
+  border-radius: var(--radius);
+  background-color: var(--color-papel);
+}
+
+.tabla-propiedades {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 780px;
+}
+
+.tabla-propiedades thead {
+  background-color: var(--color-selva);
+}
+
+.tabla-propiedades th {
+  color: white;
+  text-align: left;
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 0.9375rem;
+  padding: var(--space-sm) var(--space-md);
+}
+
+.tabla-propiedades td {
+  padding: var(--space-sm) var(--space-md);
+  border-bottom: 1px solid var(--color-borde);
+  vertical-align: middle;
+  font-size: 0.9375rem;
+}
+
+.tabla-propiedades tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.tabla-propiedades tbody tr:hover {
+  background-color: var(--color-arena);
+}
+
+.tabla-foto {
+  width: 84px;
+  height: 64px;
+  object-fit: cover;
+  border-radius: var(--radius);
+}
+
+.tabla-titulo {
+  font-weight: 600;
+}
+
+.precio-tabla {
+  color: var(--color-ocre);
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+/* =========================================================
+   FICHA DE PRODUCTO — producto.html
+   ========================================================= */
+.producto-detalle {
+  max-width: var(--max-width);
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 1.2fr 1fr;
+  gap: var(--space-lg);
+  align-items: start;
+}
+
+.producto-galeria-principal {
+  aspect-ratio: 4 / 3;
+  border-radius: var(--radius);
+  overflow: hidden;
+  background-color: var(--color-borde);
+}
+
+.producto-galeria-principal img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.producto-miniaturas {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: var(--space-xs);
+  margin-top: var(--space-xs);
+}
+
+.producto-miniaturas img {
+  aspect-ratio: 1 / 1;
+  object-fit: cover;
+  border-radius: var(--radius);
+  border: 2px solid transparent;
+  cursor: pointer;
+}
+
+.producto-miniaturas img.activa {
+  border-color: var(--color-ocre);
+}
+
+.producto-info {
+  background-color: var(--color-papel);
+  border: 1px solid var(--color-borde);
+  border-radius: var(--radius);
+  padding: var(--space-md);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+}
+
+.producto-info .badge {
+  position: static;
+  display: inline-block;
+  margin-bottom: var(--space-xs);
+}
+
+.producto-ubicacion {
+  color: var(--color-musgo);
+}
+
+.producto-precio {
+  color: var(--color-ocre);
+  font-family: var(--font-display);
+  font-size: 2rem;
+  font-weight: 700;
+  margin: var(--space-xs) 0;
+}
+
+.producto-meta {
+  display: flex;
+  gap: var(--space-md);
+  border-top: 1px solid var(--color-borde);
+  border-bottom: 1px solid var(--color-borde);
+  padding: var(--space-sm) 0;
+  margin: var(--space-xs) 0;
+}
+
+.producto-meta div {
+  display: flex;
+  flex-direction: column;
+}
+
+.producto-meta span:first-child {
+  font-weight: 700;
+  font-size: 1.125rem;
+  color: var(--color-tinta);
+}
+
+.producto-meta span:last-child {
+  font-size: 0.8125rem;
+  color: var(--color-musgo);
+}
+
+.producto-acciones {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+  margin-top: var(--space-xs);
+}
+
+.producto-descripcion,
+.producto-caracteristicas {
+  max-width: var(--max-width);
+  margin: var(--space-lg) auto 0 auto;
+}
+
+.producto-caracteristicas ul {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: var(--space-xs) var(--space-md);
+  margin-top: var(--space-sm);
+}
+
+.producto-caracteristicas li {
+  padding-left: 1.25rem;
+  position: relative;
+  color: var(--color-tinta);
+}
+
+.producto-caracteristicas li::before {
+  content: "✓";
+  position: absolute;
+  left: 0;
+  color: var(--color-selva);
+  font-weight: 700;
 }
 
 /* =========================================================
@@ -455,7 +741,7 @@ textarea:focus-visible {
 }
 
 /* =========================================================
-   CONTACTO — Grid de dos columnas (info | formulario)
+   CONTACTO / COMPRAR — Formularios
    ========================================================= */
 .contacto {
   max-width: var(--max-width);
@@ -469,21 +755,27 @@ textarea:focus-visible {
   margin-bottom: var(--space-xs);
 }
 
-.contacto-form {
+.contacto-form,
+.comprar-form {
   display: flex;
   flex-direction: column;
   gap: var(--space-xs);
 }
 
-.contacto-form label {
+.contacto-form label,
+.comprar-form label {
   font-weight: 600;
   font-size: 0.875rem;
   margin-top: var(--space-xs);
 }
 
 .contacto-form input,
-.contacto-form textarea {
+.contacto-form textarea,
+.comprar-form input,
+.comprar-form select,
+.comprar-form textarea {
   font-family: var(--font-body);
+  font-size: 1rem;
   padding: 0.65rem;
   border: 1px solid var(--color-borde);
   border-radius: var(--radius);
@@ -491,9 +783,114 @@ textarea:focus-visible {
   color: var(--color-tinta);
 }
 
-.contacto-form button {
+.contacto-form button,
+.comprar-form button {
   margin-top: var(--space-sm);
   align-self: flex-start;
+}
+
+/* Formulario de compra — layout de dos columnas (datos | resumen) */
+.comprar-layout {
+  max-width: var(--max-width);
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 1.3fr 1fr;
+  gap: var(--space-lg);
+  align-items: start;
+}
+
+.comprar-form-card,
+.comprar-resumen {
+  background-color: var(--color-papel);
+  border: 1px solid var(--color-borde);
+  border-radius: var(--radius);
+  padding: var(--space-md);
+}
+
+.comprar-form-card h2,
+.comprar-resumen h2 {
+  font-size: 1.375rem;
+  margin-bottom: var(--space-sm);
+}
+
+.form-grid-2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0 var(--space-sm);
+}
+
+/* Listado de productos dentro del formulario: tarjetas seleccionables */
+.productos-seleccion {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+  margin-top: var(--space-xs);
+}
+
+.producto-opcion {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  border: 1px solid var(--color-borde);
+  border-radius: var(--radius);
+  padding: var(--space-xs) var(--space-sm);
+  background-color: var(--color-papel);
+  cursor: pointer;
+}
+
+.producto-opcion:has(input:checked) {
+  border-color: var(--color-ocre);
+  background-color: var(--color-arena);
+}
+
+.producto-opcion img {
+  width: 64px;
+  height: 48px;
+  object-fit: cover;
+  border-radius: 4px;
+  flex-shrink: 0;
+}
+
+.producto-opcion-info {
+  flex-grow: 1;
+}
+
+.producto-opcion-info p:first-child {
+  font-weight: 600;
+  font-size: 0.9375rem;
+}
+
+.producto-opcion-info p:last-child {
+  font-size: 0.8125rem;
+  color: var(--color-ocre);
+  font-weight: 700;
+}
+
+.producto-opcion input[type="checkbox"] {
+  width: 18px;
+  height: 18px;
+  accent-color: var(--color-tierra);
+  flex-shrink: 0;
+}
+
+.comprar-resumen ul {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+}
+
+.comprar-resumen li {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.9375rem;
+  padding-bottom: var(--space-xs);
+  border-bottom: 1px solid var(--color-borde);
+}
+
+.comprar-resumen-nota {
+  margin-top: var(--space-sm);
+  font-size: 0.8125rem;
+  color: var(--color-musgo);
 }
 
 /* =========================================================
@@ -529,7 +926,13 @@ textarea:focus-visible {
 /* Tablet */
 @media (max-width: 900px) {
   .nosotros,
-  .contacto {
+  .contacto,
+  .producto-detalle,
+  .comprar-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .form-grid-2 {
     grid-template-columns: 1fr;
   }
 
@@ -579,6 +982,10 @@ textarea:focus-visible {
   .hero-content h1 { font-size: 1.75rem; }
   .hero-actions { flex-direction: column; width: 100%; }
   .hero-actions .btn { text-align: center; }
+
+  .producto-miniaturas {
+    grid-template-columns: repeat(3, 1fr);
+  }
 
   section { padding: var(--space-lg) var(--space-sm); }
 }
