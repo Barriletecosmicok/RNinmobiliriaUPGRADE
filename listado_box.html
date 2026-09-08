@@ -50,16 +50,19 @@
     <section class="catalogo">
 
       <div class="filtros">
-        <span class="filtro-chip activo">Todos</span>
-        <span class="filtro-chip">Casas</span>
-        <span class="filtro-chip">Terrenos</span>
-        <span class="filtro-chip">Departamentos</span>
-        <span class="filtro-chip">Locales comerciales</span>
+        <input type="radio" name="filtro" id="filtro-todos" class="filtro-radio" checked>
+        <label for="filtro-todos" class="filtro-chip">Todos</label>
+
+        <input type="radio" name="filtro" id="filtro-casas" class="filtro-radio">
+        <label for="filtro-casas" class="filtro-chip">Casas</label>
+
+        <input type="radio" name="filtro" id="filtro-terrenos" class="filtro-radio">
+        <label for="filtro-terrenos" class="filtro-chip">Terrenos</label>
       </div>
 
       <div class="grid-propiedades">
 
-        <article class="card-propiedad">
+        <article class="card-propiedad" data-tipo="casa">
           <div class="card-galeria">
             <div class="card-galeria-scroll">
               <img src="img/casa-villa-sarita-dormitorio.png" alt="Dormitorio principal con techo de madera">
@@ -85,7 +88,7 @@
           </div>
         </article>
 
-        <article class="card-propiedad">
+        <article class="card-propiedad" data-tipo="terreno">
           <div class="card-galeria">
             <div class="card-galeria-scroll">
               <img src="img/terreno-itaembe-guazu.png" alt="Vista del espacio exterior del terreno en Itaembé Guazú">
@@ -100,11 +103,11 @@
             <div class="card-meta">
               <span>300 m²</span>
             </div>
-            <a href="producto.html" class="btn btn-outline btn-sm card-ver-ficha">Ver ficha</a>
+            <a href="producto-terreno-itaembe.html" class="btn btn-outline btn-sm card-ver-ficha">Ver ficha</a>
           </div>
         </article>
 
-        <article class="card-propiedad">
+        <article class="card-propiedad" data-tipo="casa">
           <div class="card-galeria">
             <div class="card-galeria-scroll">
               <img src="img/casa-centro-fachada.png" alt="Fachada de la casa de dos plantas">
@@ -123,7 +126,7 @@
               <span>90 m²</span>
               <span>3 ambientes</span>
             </div>
-            <a href="producto.html" class="btn btn-outline btn-sm card-ver-ficha">Ver ficha</a>
+            <a href="producto-centro.html" class="btn btn-outline btn-sm card-ver-ficha">Ver ficha</a>
           </div>
         </article>
 
