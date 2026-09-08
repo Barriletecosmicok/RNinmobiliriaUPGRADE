@@ -330,6 +330,14 @@ textarea:focus-visible {
   flex-wrap: wrap;
 }
 
+/* Radio oculto (mismo truco que el menú hamburguesa) + label que hace de "chip" clickeable */
+.filtro-radio {
+  position: absolute;
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
 .filtro-chip {
   padding: 0.5rem 1.1rem;
   border-radius: 999px;
@@ -338,12 +346,29 @@ textarea:focus-visible {
   color: var(--color-musgo);
   font-size: 0.875rem;
   font-weight: 600;
+  cursor: pointer;
+  user-select: none;
 }
 
-.filtro-chip.activo {
+.filtro-radio:checked + .filtro-chip {
   background-color: var(--color-selva);
   border-color: var(--color-selva);
   color: white;
+}
+
+.filtro-radio:focus-visible + .filtro-chip {
+  outline: 3px solid var(--color-ocre);
+  outline-offset: 2px;
+}
+
+/* Filtrado sin JavaScript: según qué radio esté marcado, se ocultan
+   las tarjetas cuyo data-tipo no coincida con el filtro elegido. */
+.catalogo:has(#filtro-casas:checked) .grid-propiedades .card-propiedad:not([data-tipo="casa"]) {
+  display: none;
+}
+
+.catalogo:has(#filtro-terrenos:checked) .grid-propiedades .card-propiedad:not([data-tipo="terreno"]) {
+  display: none;
 }
 
 /* =========================================================
@@ -584,7 +609,7 @@ textarea:focus-visible {
 
 .producto-miniaturas {
   display: grid;
-  grid-template-columns: repeat(6, 1fr);
+  grid-template-columns: repeat(auto-fit, minmax(70px, 1fr));
   gap: var(--space-xs);
   margin-top: var(--space-xs);
 }
