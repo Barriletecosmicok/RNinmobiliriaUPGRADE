@@ -1008,14 +1008,17 @@ textarea:focus-visible {
     background-color: white;
   }
 
+  .header-inner {
+    flex-wrap: wrap;
+  }
+
   .main-nav {
     display: none;
     width: 100%;
-    position: absolute;
-    top: 100%;
-    left: 0;
+    order: 3;
     background-color: var(--color-selva);
     padding: var(--space-sm);
+    margin-top: var(--space-sm);
   }
 
   .main-nav ul {
