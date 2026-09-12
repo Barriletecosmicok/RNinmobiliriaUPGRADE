@@ -156,6 +156,10 @@ textarea:focus-visible {
 .site-header {
   background-color: var(--color-selva);
   padding: var(--space-sm) var(--space-md);
+  /* Contexto de posicionamiento + apilamiento del menú móvil:
+     garantiza que el desplegable se dibuje SOBRE el contenido de la página. */
+  position: relative;
+  z-index: 100;
 }
 
 .header-inner {
@@ -1005,23 +1009,76 @@ textarea:focus-visible {
   .menu-toggle-btn span {
     display: block;
     height: 2px;
+    width: 100%;
     background-color: white;
+    transition: transform 0.25s ease, opacity 0.2s ease;
+  }
+
+  /* El botón se convierte en una "X" cuando el menú está abierto */
+  .menu-toggle-input:checked ~ .menu-toggle-btn span:nth-child(1) {
+    transform: translateY(7px) rotate(45deg);
+  }
+  .menu-toggle-input:checked ~ .menu-toggle-btn span:nth-child(2) {
+    opacity: 0;
+  }
+  .menu-toggle-input:checked ~ .menu-toggle-btn span:nth-child(3) {
+    transform: translateY(-7px) rotate(-45deg);
+  }
+
+  /* El contenedor deja de posicionar: así el panel se ancla al borde
+     inferior del header y ocupa todo su ancho (sin superponerse al título). */
+  .header-inner {
+    position: static;
   }
 
   .main-nav {
     display: none;
-    width: 100%;
     position: absolute;
     top: 100%;
     left: 0;
+    right: 0;
+    z-index: 100;
     background-color: var(--color-selva);
-    padding: var(--space-sm);
+    padding: var(--space-sm) var(--space-md) var(--space-md);
+    border-top: 1px solid rgba(255, 255, 255, 0.18);
+    box-shadow: 0 14px 28px rgba(0, 0, 0, 0.3);
+    max-height: calc(100vh - 100%);
+    overflow-y: auto;
   }
 
   .main-nav ul {
     flex-direction: column;
-    align-items: flex-start;
-    gap: var(--space-sm);
+    align-items: stretch;
+    gap: 0;
+  }
+
+  .main-nav li {
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  }
+  .main-nav li:last-child {
+    border-bottom: none;
+  }
+
+  .main-nav a {
+    display: block;
+    padding: var(--space-sm) 0;
+  }
+
+  /* En vertical, el subrayado del enlace activo se reemplaza por una barra lateral */
+  .main-nav a.active {
+    border-bottom: none;
+    border-left: 3px solid var(--color-ocre);
+    padding-left: var(--space-xs);
+    padding-bottom: var(--space-sm);
+  }
+
+  .nav-comprar {
+    margin-top: var(--space-sm);
+  }
+  .nav-comprar .btn-outline {
+    display: block;
+    text-align: center;
+    padding: 0.75rem 1.25rem;
   }
 
   /* Cuando el checkbox está marcado, se muestra el menú */
