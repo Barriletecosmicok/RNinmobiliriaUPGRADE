@@ -156,10 +156,6 @@ textarea:focus-visible {
 .site-header {
   background-color: var(--color-selva);
   padding: var(--space-sm) var(--space-md);
-  /* Contexto de posicionamiento + apilamiento del menú móvil:
-     garantiza que el desplegable se dibuje SOBRE el contenido de la página. */
-  position: relative;
-  z-index: 100;
 }
 
 .header-inner {
@@ -1025,25 +1021,22 @@ textarea:focus-visible {
     transform: translateY(-7px) rotate(-45deg);
   }
 
-  /* El contenedor deja de posicionar: así el panel se ancla al borde
-     inferior del header y ocupa todo su ancho (sin superponerse al título). */
+  /* El menú se despliega DENTRO del header y empuja el contenido hacia abajo.
+     Al no flotar sobre la página, no puede superponerse con el banner ni con
+     el hero: la ausencia de superposición es estructural, no depende de
+     z-index ni del orden de pintado. */
   .header-inner {
-    position: static;
+    flex-wrap: wrap;
   }
 
   .main-nav {
     display: none;
-    position: absolute;
-    top: 100%;
-    left: 0;
-    right: 0;
-    z-index: 100;
+    width: 100%;
+    order: 3;
     background-color: var(--color-selva);
-    padding: var(--space-sm) var(--space-md) var(--space-md);
+    margin-top: var(--space-sm);
+    padding-top: var(--space-xs);
     border-top: 1px solid rgba(255, 255, 255, 0.18);
-    box-shadow: 0 14px 28px rgba(0, 0, 0, 0.3);
-    max-height: calc(100vh - 100%);
-    overflow-y: auto;
   }
 
   .main-nav ul {
