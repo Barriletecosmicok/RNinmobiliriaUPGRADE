@@ -38,6 +38,9 @@ ul {
   --color-tierra-oscuro: #7C2C15;
   --color-musgo: #6B7A6E;
   --color-borde: #DDD2BA;
+  --color-sobre-selva: #EFE6D3; /* texto claro sobre bloques verdes (no cambia con el tema) */
+  --color-exito-fondo: #E3EEE7;
+  --color-error-fondo: #FBEDE8;
 
   /* Tipografía */
   --font-display: 'Zilla Slab', serif;
@@ -237,7 +240,7 @@ textarea:focus-visible {
 }
 
 .hero-content p {
-  color: var(--color-arena);
+  color: var(--color-sobre-selva);
   font-size: 1.125rem;
 }
 
@@ -263,14 +266,14 @@ textarea:focus-visible {
 }
 
 .breadcrumb {
-  color: var(--color-arena);
+  color: var(--color-sobre-selva);
   font-size: 0.8125rem;
   margin-bottom: var(--space-xs);
   opacity: 0.8;
 }
 
 .breadcrumb a {
-  color: var(--color-arena);
+  color: var(--color-sobre-selva);
   font-weight: 600;
 }
 .breadcrumb a:hover {
@@ -283,7 +286,7 @@ textarea:focus-visible {
 }
 
 .page-banner p {
-  color: var(--color-arena);
+  color: var(--color-sobre-selva);
   margin-top: var(--space-xs);
 }
 
@@ -948,7 +951,7 @@ textarea:focus-visible {
    ========================================================= */
 .site-footer {
   background-color: var(--color-selva);
-  color: var(--color-arena);
+  color: var(--color-sobre-selva);
   padding: var(--space-xl) var(--space-md);
   display: flex;
   flex-direction: column;
@@ -1056,7 +1059,7 @@ textarea:focus-visible {
 
 .comprar-form input[aria-invalid="true"] {
   border-color: var(--color-tierra);
-  background-color: #FBEDE8;
+  background-color: var(--color-error-fondo);
 }
 
 /* Mensaje de respuesta del "servidor" */
@@ -1069,12 +1072,12 @@ textarea:focus-visible {
   font-size: 0.9375rem;
 }
 .form-alerta--exito {
-  background-color: #E3EEE7;
+  background-color: var(--color-exito-fondo);
   border-color: var(--color-selva-claro);
   color: var(--color-selva);
 }
 .form-alerta--error {
-  background-color: #FBEDE8;
+  background-color: var(--color-error-fondo);
   border-color: var(--color-tierra);
   color: var(--color-tierra-oscuro);
 }
@@ -1106,7 +1109,7 @@ textarea:focus-visible {
   text-decoration: underline;
 }
 .aviso-cuenta--ok {
-  background-color: #E3EEE7;
+  background-color: var(--color-exito-fondo);
   color: var(--color-selva);
 }
 
@@ -1141,6 +1144,279 @@ textarea:focus-visible {
 }
 .aviso-flotante.is-visible {
   transform: translate(-50%, 0);
+}
+
+
+/* =========================================================
+   TEMA OSCURO — app.js alterna la clase .tema-oscuro en <html>
+   con classList.toggle(). Solo se redefinen las variables,
+   así todos los componentes cambian sin duplicar reglas.
+   ========================================================= */
+:root.tema-oscuro {
+  color-scheme: dark;
+
+  --color-selva: #12261E;
+  --color-selva-claro: #5E9C7F;
+  --color-arena: #161915;
+  --color-papel: #20241F;
+  --color-tinta: #ECE6D8;
+  --color-ocre: #DDA24C;
+  --color-tierra: #C4532F;
+  --color-tierra-oscuro: #A63C1E;
+  --color-musgo: #A2ADA4;
+  --color-borde: #363D36;
+  --color-exito-fondo: #1D3329;
+  --color-error-fondo: #3A221B;
+}
+
+/* Elementos que usaban el verde como color de texto: en oscuro pasan a claros */
+.tema-oscuro main .btn-outline {
+  border-color: var(--color-tinta);
+  color: var(--color-tinta);
+}
+.tema-oscuro main .btn-outline:hover {
+  background-color: var(--color-tinta);
+  color: var(--color-papel);
+}
+.tema-oscuro .card-servicio li::before,
+.tema-oscuro .producto-caracteristicas li::before,
+.tema-oscuro .form-alerta--exito,
+.tema-oscuro .aviso-cuenta--ok {
+  color: var(--color-selva-claro);
+}
+.tema-oscuro .form-alerta--error,
+.tema-oscuro .campo-error,
+.tema-oscuro .auth-tab.is-activa,
+.tema-oscuro .aviso-cuenta a,
+.tema-oscuro .ver-todas {
+  color: #E88A68;
+}
+.tema-oscuro .auth-tab.is-activa {
+  border-bottom-color: #E88A68;
+}
+.tema-oscuro .site-header,
+.tema-oscuro .site-footer {
+  border-color: var(--color-borde);
+}
+
+/* Transición suave al cambiar de tema */
+body,
+.card-propiedad,
+.card-servicio,
+.valor,
+.comprar-form-card,
+.comprar-resumen {
+  transition: background-color 0.25s ease, color 0.25s ease, border-color 0.25s ease;
+}
+
+/* Botón conmutador de tema (en el header de todas las páginas) */
+.btn-tema {
+  order: 4;
+  margin-left: var(--space-md);
+  width: 40px;
+  height: 40px;
+  flex-shrink: 0;
+  border-radius: 50%;
+  border: 2px solid rgba(255, 255, 255, 0.6);
+  background: transparent;
+  color: white;
+  font-size: 1.125rem;
+  line-height: 1;
+  cursor: pointer;
+}
+.btn-tema:hover {
+  border-color: var(--color-ocre);
+  color: var(--color-ocre);
+}
+
+.main-nav {
+  margin-left: auto;
+}
+
+/* =========================================================
+   GALERÍA INTERACTIVA — Propiedades destacadas (index)
+   ========================================================= */
+.galeria-controles {
+  max-width: var(--max-width);
+  margin: 0 auto var(--space-sm) auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: var(--space-xs);
+  flex-wrap: wrap;
+}
+
+.galeria-filtros {
+  display: flex;
+  gap: var(--space-xs);
+  flex-wrap: wrap;
+}
+
+.filtro-chip {
+  font-family: var(--font-body);
+}
+
+.filtro-chip.is-activo {
+  background-color: var(--color-selva);
+  border-color: var(--color-selva);
+  color: white;
+}
+
+.filtro-chip--resaltar.is-activo {
+  background-color: var(--color-ocre);
+  border-color: var(--color-ocre);
+  color: var(--color-tinta);
+}
+.tema-oscuro .filtro-chip--resaltar.is-activo {
+  color: #161915;
+}
+/* En oscuro el verde de fondo se confunde con la página: el chip activo usa el verde claro */
+.tema-oscuro .filtro-chip.is-activo:not(.filtro-chip--resaltar),
+.tema-oscuro .filtro-radio:checked + .filtro-chip {
+  background-color: var(--color-selva-claro);
+  border-color: var(--color-selva-claro);
+  color: #10160F;
+}
+
+.galeria-estado {
+  max-width: var(--max-width);
+  margin: 0 auto var(--space-md) auto;
+  font-size: 0.875rem;
+  color: var(--color-musgo);
+}
+.galeria-estado.is-error {
+  color: var(--color-tierra);
+  font-weight: 600;
+}
+
+/* Filtro: las tarjetas que no coinciden se ocultan con classList.toggle('is-oculta') */
+.card-propiedad.is-oculta {
+  display: none;
+}
+
+/* Modo "resaltar destacadas": la grilla recibe .modo-resaltado */
+.card-propiedad {
+  transition: opacity 0.25s ease, transform 0.25s ease, box-shadow 0.25s ease;
+}
+.modo-resaltado .card-propiedad:not(.es-destacada) {
+  opacity: 0.4;
+}
+.modo-resaltado .card-propiedad.es-destacada {
+  border-color: var(--color-ocre);
+  box-shadow: 0 0 0 3px var(--color-ocre);
+  transform: translateY(-4px);
+}
+
+.cinta-destacada {
+  position: absolute;
+  top: calc(var(--space-sm) + 2rem);
+  left: var(--space-sm);
+  background-color: var(--color-ocre);
+  color: #1C1A15;
+  font-size: 0.75rem;
+  font-weight: 700;
+  padding: 0.2rem 0.7rem;
+  border-radius: 999px;
+}
+
+/* Botón "Ver fotos" que abre el visor */
+.btn-ver-fotos {
+  position: absolute;
+  bottom: var(--space-xs);
+  right: var(--space-xs);
+  background-color: rgba(28, 26, 21, 0.75);
+  color: white;
+  border: none;
+  font-family: var(--font-body);
+  font-size: 0.75rem;
+  font-weight: 600;
+  padding: 0.3rem 0.75rem;
+  border-radius: 999px;
+  cursor: pointer;
+}
+.btn-ver-fotos:hover {
+  background-color: var(--color-tierra);
+}
+
+/* Visor de fotos (<dialog> modal) */
+.visor {
+  width: min(900px, calc(100% - 2rem));
+  max-height: calc(100% - 2rem);
+  margin: auto;
+  padding: 0;
+  border: none;
+  border-radius: var(--radius);
+  background-color: var(--color-papel);
+  color: var(--color-tinta);
+}
+/* El padding va en el contenido: así un click que llega al <dialog> es siempre en el fondo */
+.visor-contenido {
+  padding: var(--space-sm);
+}
+.visor::backdrop {
+  background-color: rgba(10, 12, 10, 0.8);
+}
+
+.visor-cabecera {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: var(--space-sm);
+  margin-bottom: var(--space-xs);
+}
+
+.visor-titulo {
+  font-size: 1.125rem;
+}
+
+.visor-figura img {
+  width: 100%;
+  max-height: 65vh;
+  object-fit: contain;
+  background-color: #000;
+  border-radius: 4px;
+}
+
+.visor-figura figcaption {
+  font-size: 0.875rem;
+  color: var(--color-musgo);
+  margin-top: var(--space-xs);
+  text-align: center;
+}
+
+.visor-navegacion {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: var(--space-md);
+  margin-top: var(--space-xs);
+}
+
+.visor-btn {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: 1px solid var(--color-borde);
+  background-color: var(--color-arena);
+  color: var(--color-tinta);
+  font-size: 1.375rem;
+  line-height: 1;
+  cursor: pointer;
+}
+.visor-btn:hover:not(:disabled) {
+  background-color: var(--color-selva);
+  color: white;
+}
+.visor-btn:disabled {
+  opacity: 0.35;
+  cursor: default;
+}
+
+.visor-contador {
+  font-weight: 600;
+  font-size: 0.9375rem;
+  min-width: 4ch;
+  text-align: center;
 }
 
 /* =========================================================
@@ -1203,7 +1479,20 @@ textarea:focus-visible {
     flex-wrap: wrap;
   }
 
+  /* Orden en mobile: logo · tema · hamburguesa / menú desplegado debajo */
+  .btn-tema {
+    order: 1;
+    margin-left: auto;
+    margin-right: var(--space-sm);
+    width: 36px;
+    height: 36px;
+  }
+  .menu-toggle-btn {
+    order: 2;
+  }
+
   .main-nav {
+    margin-left: 0;
     display: none;
     width: 100%;
     order: 3;

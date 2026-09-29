@@ -1,0 +1,53 @@
+{
+  "propiedades": [
+    {
+      "id": "villa-sarita",
+      "titulo": "Casa 3 ambientes con pileta en Villa Sarita",
+      "tipo": "casa",
+      "barrio": "Villa Sarita, Posadas",
+      "precio": 85000,
+      "superficie": 120,
+      "ambientes": 3,
+      "destacada": true,
+      "ficha": "producto.html",
+      "fotos": [
+        { "src": "img/casa-villa-sarita-dormitorio.png", "alt": "Dormitorio principal con techo de madera" },
+        { "src": "img/casa-villa-sarita-cocina.png", "alt": "Cocina y comedor integrados con isla central" },
+        { "src": "img/casa-villa-sarita-pileta.png", "alt": "Pileta en el patio de la propiedad" },
+        { "src": "img/casa-villa-sarita-vestidor.png", "alt": "Vestidor amplio con estantes de madera" },
+        { "src": "img/casa-villa-sarita-garage.png", "alt": "Garage y área de lavado con espacio para auto" },
+        { "src": "img/casa-villa-sarita-galeria.png", "alt": "Galería exterior con plantas" }
+      ]
+    },
+    {
+      "id": "itaembe-guazu",
+      "titulo": "Terreno baldío en Itaembé Guazú",
+      "tipo": "terreno",
+      "barrio": "Itaembé Guazú, Posadas",
+      "precio": 22000,
+      "superficie": 300,
+      "ambientes": null,
+      "destacada": false,
+      "ficha": "producto-terreno-itaembe.html",
+      "fotos": [
+        { "src": "img/terreno-itaembe-guazu.png", "alt": "Vista del espacio exterior del terreno en Itaembé Guazú" }
+      ]
+    },
+    {
+      "id": "barrio-centro",
+      "titulo": "Casa 2 plantas en Barrio Centro",
+      "tipo": "casa",
+      "barrio": "Centro, Posadas",
+      "precio": 75000,
+      "superficie": 90,
+      "ambientes": 3,
+      "destacada": true,
+      "ficha": "producto-centro.html",
+      "fotos": [
+        { "src": "img/casa-centro-fachada.png", "alt": "Fachada de la casa de dos plantas" },
+        { "src": "img/casa-centro-patio.png", "alt": "Patio interno con plantas" },
+        { "src": "img/casa-centro-living.png", "alt": "Living comedor amplio" }
+      ]
+    }
+  ]
+}

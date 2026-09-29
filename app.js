@@ -9,12 +9,19 @@
       contra el archivo local data/usuarios.json (servidor simulado).
    3. VSDM: la visibilidad de cada elemento depende de la audiencia
       (visitante vs. usuario autenticado) mediante el atributo data-vista.
+
+   Galería Interactiva y Modo Oscuro/Claro:
+   4. Las propiedades destacadas se cargan con fetch() desde
+      data/propiedades.json y se filtran / resaltan con classList.toggle().
+   5. El tema visual se alterna con classList.toggle('tema-oscuro').
    ========================================================= */
 
 const URL_USUARIOS = 'data/usuarios.json';
 const CLAVE_SESION = 'rn-sesion';
 const CLAVE_REGISTRADOS = 'rn-usuarios-registrados';
 const CLAVE_FAVORITOS = 'rn-favoritos';
+const CLAVE_TEMA = 'rn-tema';
+const URL_PROPIEDADES = 'data/propiedades.json';
 const LONGITUD_MINIMA = 8;
 const DEMORA_RED_MS = 700; // latencia simulada del "servidor"
 
@@ -323,8 +330,7 @@ function actualizarFavoritos() {
   });
 }
 
-function manejarFavorito(evento) {
-  const boton = evento.currentTarget;
+function manejarFavorito(boton) {
   const sesion = obtenerSesion();
 
   // VSDM: el visitante no puede guardar favoritos, se lo invita a ingresar
@@ -384,6 +390,209 @@ function precargarFormularioCompra() {
 }
 
 /* ---------------------------------------------------------
+   Tema claro / oscuro
+   --------------------------------------------------------- */
+function temaGuardado() {
+  try {
+    return localStorage.getItem(CLAVE_TEMA);
+  } catch {
+    return null;
+  }
+}
+
+function prefiereOscuro() {
+  return window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+}
+
+// Se ejecuta apenas carga el script para evitar un "parpadeo" de tema
+function aplicarTemaInicial() {
+  const guardado = temaGuardado();
+  const oscuro = guardado ? guardado === 'oscuro' : prefiereOscuro();
+  document.documentElement.classList.toggle('tema-oscuro', oscuro);
+}
+
+function actualizarBotonTema() {
+  const oscuro = document.documentElement.classList.contains('tema-oscuro');
+  document.querySelectorAll('[data-accion="alternar-tema"]').forEach((boton) => {
+    boton.setAttribute('aria-pressed', String(oscuro));
+    boton.setAttribute('aria-label', oscuro ? 'Activar modo claro' : 'Activar modo oscuro');
+    boton.title = oscuro ? 'Modo claro' : 'Modo oscuro';
+    boton.querySelector('.btn-tema-icono').textContent = oscuro ? '☀' : '☾';
+  });
+}
+
+function alternarTema() {
+  // classList.toggle devuelve true si la clase quedó agregada
+  const oscuro = document.documentElement.classList.toggle('tema-oscuro');
+  try {
+    localStorage.setItem(CLAVE_TEMA, oscuro ? 'oscuro' : 'claro');
+  } catch {
+    /* sin persistencia: el tema vale solo para esta página */
+  }
+  actualizarBotonTema();
+}
+
+aplicarTemaInicial();
+
+/* ---------------------------------------------------------
+   Galería interactiva: propiedades destacadas vía fetch()
+   --------------------------------------------------------- */
+let propiedades = [];
+const formatoPrecio = new Intl.NumberFormat('es-AR');
+
+function crear(etiqueta, clase, texto) {
+  const el = document.createElement(etiqueta);
+  if (clase) el.className = clase;
+  if (texto !== undefined) el.textContent = texto;
+  return el;
+}
+
+function crearTarjeta(propiedad) {
+  const card = crear('article', 'card-propiedad');
+  card.dataset.tipo = propiedad.tipo;
+  card.dataset.id = propiedad.id;
+  card.classList.toggle('es-destacada', propiedad.destacada);
+
+  // Galería deslizable de la tarjeta
+  const galeria = crear('div', 'card-galeria');
+  const scroll = crear('div', 'card-galeria-scroll');
+  propiedad.fotos.forEach((foto) => {
+    const img = crear('img');
+    img.src = foto.src;
+    img.alt = foto.alt;
+    img.loading = 'lazy';
+    scroll.appendChild(img);
+  });
+  const verFotos = crear('button', 'btn-ver-fotos',
+    propiedad.fotos.length > 1 ? `Ver ${propiedad.fotos.length} fotos` : 'Ver foto');
+  verFotos.type = 'button';
+  verFotos.dataset.propiedad = propiedad.id;
+  galeria.append(scroll, verFotos);
+
+  const tipo = propiedad.tipo === 'casa' ? 'Casa' : 'Terreno';
+  const badge = crear('span', 'badge', tipo);
+
+  const favorito = crear('button', 'btn-favorito', '♥');
+  favorito.type = 'button';
+  favorito.setAttribute('aria-label', 'Agregar a favoritos');
+
+  const contenido = crear('div', 'card-contenido');
+  const meta = crear('div', 'card-meta');
+  meta.appendChild(crear('span', '', `${propiedad.superficie} m²`));
+  if (propiedad.ambientes) meta.appendChild(crear('span', '', `${propiedad.ambientes} ambientes`));
+  const ficha = crear('a', 'btn btn-outline btn-sm card-ver-ficha', 'Ver ficha');
+  ficha.href = propiedad.ficha;
+  contenido.append(
+    crear('h3', '', propiedad.titulo),
+    crear('p', 'card-ubicacion', propiedad.barrio),
+    crear('p', 'card-precio', `USD ${formatoPrecio.format(propiedad.precio)}`),
+    meta,
+    ficha
+  );
+
+  card.append(galeria, badge, favorito, contenido);
+  if (propiedad.destacada) card.appendChild(crear('span', 'cinta-destacada', '★ Destacada'));
+  return card;
+}
+
+function actualizarEstadoGaleria() {
+  const estado = document.getElementById('galeria-estado');
+  const tarjetas = document.querySelectorAll('#galeria-destacadas .card-propiedad');
+  const visibles = [...tarjetas].filter((t) => !t.classList.contains('is-oculta')).length;
+  estado.classList.remove('is-error');
+  estado.textContent = `Mostrando ${visibles} de ${tarjetas.length} propiedades.`;
+}
+
+async function cargarGaleria() {
+  const grilla = document.getElementById('galeria-destacadas');
+  const estado = document.getElementById('galeria-estado');
+  try {
+    const respuesta = await fetch(URL_PROPIEDADES, { cache: 'no-store' });
+    if (!respuesta.ok) throw new Error(`HTTP ${respuesta.status}`);
+    const datos = await respuesta.json();
+    propiedades = datos.propiedades;
+
+    grilla.replaceChildren(...propiedades.map(crearTarjeta));
+    actualizarEstadoGaleria();
+    actualizarFavoritos();
+  } catch (error) {
+    estado.classList.add('is-error');
+    estado.textContent = 'No pudimos cargar las propiedades. Abrí el sitio con un servidor local (por ej. Live Server).';
+    console.error('Error al cargar la galería:', error);
+  } finally {
+    grilla.removeAttribute('aria-busy');
+  }
+}
+
+function filtrarGaleria(filtro) {
+  document.querySelectorAll('[data-filtro]').forEach((boton) => {
+    const activo = boton.dataset.filtro === filtro;
+    boton.classList.toggle('is-activo', activo);
+    boton.setAttribute('aria-pressed', String(activo));
+  });
+  document.querySelectorAll('#galeria-destacadas .card-propiedad').forEach((card) => {
+    card.classList.toggle('is-oculta', filtro !== 'todas' && card.dataset.tipo !== filtro);
+  });
+  actualizarEstadoGaleria();
+}
+
+function alternarResaltado(evento) {
+  const boton = evento.currentTarget;
+  const activo = document.getElementById('galeria-destacadas').classList.toggle('modo-resaltado');
+  boton.classList.toggle('is-activo', activo);
+  boton.setAttribute('aria-pressed', String(activo));
+}
+
+/* ---------------------------------------------------------
+   Visor de fotos (contexto de navegación "fotos de una propiedad")
+   --------------------------------------------------------- */
+const visor = { propiedad: null, indice: 0 };
+
+function mostrarFotoVisor() {
+  const { propiedad, indice } = visor;
+  const foto = propiedad.fotos[indice];
+  const imagen = document.getElementById('visor-imagen');
+  imagen.src = foto.src;
+  imagen.alt = foto.alt;
+  document.getElementById('visor-leyenda').textContent = foto.alt;
+  document.getElementById('visor-contador').textContent = `${indice + 1} / ${propiedad.fotos.length}`;
+  document.querySelector('[data-visor="anterior"]').disabled = indice === 0;
+  document.querySelector('[data-visor="siguiente"]').disabled = indice === propiedad.fotos.length - 1;
+}
+
+function abrirVisor(id) {
+  const propiedad = propiedades.find((p) => p.id === id);
+  if (!propiedad) return;
+  visor.propiedad = propiedad;
+  visor.indice = 0;
+  document.getElementById('visor-titulo').textContent = propiedad.titulo;
+  mostrarFotoVisor();
+  document.getElementById('visor').showModal();
+}
+
+function moverVisor(paso) {
+  const nuevo = visor.indice + paso;
+  if (nuevo < 0 || nuevo >= visor.propiedad.fotos.length) return;
+  visor.indice = nuevo;
+  mostrarFotoVisor();
+}
+
+function iniciarVisor() {
+  const dialogo = document.getElementById('visor');
+  dialogo.querySelector('[data-visor="cerrar"]').addEventListener('click', () => dialogo.close());
+  dialogo.querySelector('[data-visor="anterior"]').addEventListener('click', () => moverVisor(-1));
+  dialogo.querySelector('[data-visor="siguiente"]').addEventListener('click', () => moverVisor(1));
+  dialogo.addEventListener('keydown', (evento) => {
+    if (evento.key === 'ArrowLeft') moverVisor(-1);
+    if (evento.key === 'ArrowRight') moverVisor(1);
+  });
+  // Click en el fondo oscuro (fuera del contenido) cierra el visor
+  dialogo.addEventListener('click', (evento) => {
+    if (evento.target === dialogo) dialogo.close();
+  });
+}
+
+/* ---------------------------------------------------------
    Inicialización: registro de eventos (desacoplado del HTML)
    --------------------------------------------------------- */
 document.addEventListener('DOMContentLoaded', () => {
@@ -405,9 +614,33 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 
-  document.querySelectorAll('.btn-favorito').forEach((boton) => {
-    boton.addEventListener('click', manejarFavorito);
+  // Delegación: sirve también para las tarjetas que se crean después con fetch()
+  document.addEventListener('click', (evento) => {
+    const boton = evento.target.closest('.btn-favorito');
+    if (boton) manejarFavorito(boton);
   });
+
+  // Conmutador de tema claro / oscuro
+  document.querySelectorAll('[data-accion="alternar-tema"]').forEach((boton) => {
+    boton.addEventListener('click', alternarTema);
+  });
+  actualizarBotonTema();
+
+  // Galería interactiva (solo existe en index.html)
+  const galeria = document.getElementById('galeria-destacadas');
+  if (galeria) {
+    document.querySelectorAll('[data-filtro]').forEach((boton) => {
+      boton.addEventListener('click', () => filtrarGaleria(boton.dataset.filtro));
+    });
+    document.querySelector('[data-accion="resaltar-destacadas"]')
+      .addEventListener('click', alternarResaltado);
+    galeria.addEventListener('click', (evento) => {
+      const boton = evento.target.closest('.btn-ver-fotos');
+      if (boton) abrirVisor(boton.dataset.propiedad);
+    });
+    iniciarVisor();
+    cargarGaleria();
+  }
 
   aplicarVista();
 });
