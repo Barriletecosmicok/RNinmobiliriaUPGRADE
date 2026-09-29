@@ -970,6 +970,180 @@ textarea:focus-visible {
 }
 
 /* =========================================================
+   AUTENTICACIÓN — Acceso, registro y vistas por audiencia (VSDM)
+   ========================================================= */
+
+/* Garantiza que [hidden] gane sobre cualquier display definido en clases */
+[hidden] {
+  display: none !important;
+}
+
+/* Ítem del usuario autenticado en el nav */
+.nav-usuario {
+  display: flex;
+  align-items: center;
+  gap: var(--space-xs);
+  color: white;
+}
+
+.nav-saludo strong {
+  color: var(--color-ocre);
+}
+
+.btn-link {
+  background: none;
+  border: none;
+  padding: 0;
+  font-family: var(--font-body);
+  font-size: 1rem;
+  font-weight: 500;
+  color: inherit;
+  text-decoration: underline;
+  cursor: pointer;
+}
+.btn-link:hover {
+  color: var(--color-ocre);
+}
+
+/* Pestañas Ingresar / Crear cuenta */
+.auth-tabs {
+  display: flex;
+  border-bottom: 2px solid var(--color-borde);
+  margin-bottom: var(--space-md);
+}
+
+.auth-tab {
+  flex: 1;
+  background: none;
+  border: none;
+  border-bottom: 3px solid transparent;
+  margin-bottom: -2px;
+  padding: var(--space-xs) var(--space-sm);
+  font-family: var(--font-display);
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--color-musgo);
+  cursor: pointer;
+}
+.auth-tab:hover {
+  color: var(--color-tinta);
+}
+.auth-tab.is-activa {
+  color: var(--color-tierra);
+  border-bottom-color: var(--color-tierra);
+}
+
+.auth-form button[type="submit"] {
+  align-self: stretch;
+}
+.auth-form button[type="submit"]:disabled {
+  opacity: 0.7;
+  cursor: wait;
+}
+
+/* Errores por campo */
+.campo-error {
+  min-height: 1.1em;
+  font-size: 0.8125rem;
+  color: var(--color-tierra);
+  font-weight: 600;
+}
+
+.campo-ayuda {
+  font-size: 0.8125rem;
+  color: var(--color-musgo);
+}
+
+.comprar-form input[aria-invalid="true"] {
+  border-color: var(--color-tierra);
+  background-color: #FBEDE8;
+}
+
+/* Mensaje de respuesta del "servidor" */
+.form-alerta {
+  padding: var(--space-xs) var(--space-sm);
+  border-radius: var(--radius);
+  border-left: 4px solid;
+  margin-bottom: var(--space-sm);
+  font-weight: 600;
+  font-size: 0.9375rem;
+}
+.form-alerta--exito {
+  background-color: #E3EEE7;
+  border-color: var(--color-selva-claro);
+  color: var(--color-selva);
+}
+.form-alerta--error {
+  background-color: #FBEDE8;
+  border-color: var(--color-tierra);
+  color: var(--color-tierra-oscuro);
+}
+.form-alerta--cargando {
+  background-color: var(--color-arena);
+  border-color: var(--color-ocre);
+  color: var(--color-tinta);
+}
+
+/* Panel del usuario autenticado */
+.cuenta-accesos {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+  margin: var(--space-md) 0;
+}
+
+/* Avisos en el formulario de compra */
+.aviso-cuenta {
+  font-size: 0.875rem;
+  padding: var(--space-xs) var(--space-sm);
+  border-radius: var(--radius);
+  background-color: var(--color-arena);
+  margin-bottom: var(--space-sm);
+}
+.aviso-cuenta a {
+  color: var(--color-tierra);
+  font-weight: 700;
+  text-decoration: underline;
+}
+.aviso-cuenta--ok {
+  background-color: #E3EEE7;
+  color: var(--color-selva);
+}
+
+.comprar-resumen-nota code {
+  font-size: 0.8125rem;
+}
+
+/* Favoritos activos */
+.btn-favorito.is-activo {
+  background-color: var(--color-tierra);
+  color: white;
+}
+
+/* Aviso flotante (toast) */
+.aviso-flotante {
+  position: fixed;
+  left: 50%;
+  bottom: var(--space-md);
+  transform: translate(-50%, 150%);
+  width: min(420px, calc(100% - 2rem));
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-sm);
+  padding: var(--space-sm);
+  background-color: var(--color-selva);
+  color: white;
+  border-radius: var(--radius);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
+  transition: transform 0.25s ease;
+  z-index: 100;
+}
+.aviso-flotante.is-visible {
+  transform: translate(-50%, 0);
+}
+
+/* =========================================================
    RESPONSIVE — Breakpoints
    ========================================================= */
 
@@ -1063,6 +1237,11 @@ textarea:focus-visible {
     border-left: 3px solid var(--color-ocre);
     padding-left: var(--space-xs);
     padding-bottom: var(--space-sm);
+  }
+
+  .nav-usuario {
+    justify-content: space-between;
+    padding: var(--space-sm) 0;
   }
 
   .nav-comprar {

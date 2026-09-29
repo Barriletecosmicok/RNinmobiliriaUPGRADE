@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ingresar o crear cuenta — RN Inmobiliaria</title>
+  <meta name="description" content="Ingresá a tu cuenta de RN Inmobiliaria o registrate para guardar favoritos y agilizar tus solicitudes de compra.">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Zilla+Slab:wght@400;500;600;700&family=Public+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="style.css?v=3">
+</head>
+<body>
+
+  <!-- ===================== HEADER ===================== -->
+  <header class="site-header">
+    <div class="header-inner">
+      <a href="index.html" class="logo">RN <span>Inmobiliaria</span></a>
+
+      <!-- Checkbox hack: menú mobile sin JavaScript -->
+      <input type="checkbox" id="menu-toggle" class="menu-toggle-input">
+      <label for="menu-toggle" class="menu-toggle-btn" aria-label="Abrir menú de navegación">
+        <span></span><span></span><span></span>
+      </label>
+
+      <nav class="main-nav" aria-label="Navegación principal">
+        <ul>
+          <li><a href="index.html">Inicio</a></li>
+          <li><a href="listado_box.html">Propiedades</a></li>
+          <li><a href="listado_tabla.html">Listado</a></li>
+          <!-- VSDM: estos ítems cambian según la audiencia (visitante / usuario autenticado) -->
+          <li data-vista="visitante"><a href="acceso.html" class="active">Ingresar</a></li>
+          <li data-vista="usuario" hidden class="nav-usuario">
+            <span class="nav-saludo">Hola, <strong data-usuario-nombre>usuario</strong></span>
+            <button type="button" class="btn-link" data-accion="cerrar-sesion">Salir</button>
+          </li>
+          <li class="nav-comprar"><a href="comprar.html" class="btn btn-outline">Comprar</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+
+    <!-- ===================== BANNER ===================== -->
+    <section class="page-banner">
+      <div class="page-banner-inner">
+        <p class="breadcrumb"><a href="index.html">Inicio</a> / Mi cuenta</p>
+        <h1>Tu cuenta en RN Inmobiliaria</h1>
+        <p>Ingresá o creá una cuenta para guardar propiedades favoritas y enviar solicitudes de compra con tus datos precargados.</p>
+      </div>
+    </section>
+
+    <section class="catalogo">
+      <div class="comprar-layout">
+
+        <!-- ============ VISTA VISITANTE: formularios de acceso ============ -->
+        <div class="comprar-form-card" data-vista="visitante">
+
+          <div class="auth-tabs" role="tablist" aria-label="Acceso de usuarios">
+            <button type="button" class="auth-tab is-activa" role="tab" id="tab-login"
+                    aria-selected="true" aria-controls="panel-login" data-tab="login">Ingresar</button>
+            <button type="button" class="auth-tab" role="tab" id="tab-registro"
+                    aria-selected="false" aria-controls="panel-registro" data-tab="registro">Crear cuenta</button>
+          </div>
+
+          <!-- Mensaje de respuesta visual (éxito / error / cargando) -->
+          <div class="form-alerta" id="auth-alerta" role="status" aria-live="polite" hidden></div>
+
+          <!-- ---------- Formulario de ingreso ---------- -->
+          <div class="auth-panel" id="panel-login" role="tabpanel" aria-labelledby="tab-login">
+            <form class="comprar-form auth-form" id="form-login" action="#" method="post" novalidate>
+              <label for="login-email">E-mail</label>
+              <input type="email" id="login-email" name="email" placeholder="nombre@correo.com" autocomplete="username" required>
+              <p class="campo-error" id="login-email-error"></p>
+
+              <label for="login-password">Contraseña</label>
+              <input type="password" id="login-password" name="password" autocomplete="current-password" minlength="8" required>
+              <p class="campo-error" id="login-password-error"></p>
+
+              <button type="submit" class="btn btn-primary">Ingresar</button>
+            </form>
+          </div>
+
+          <!-- ---------- Formulario de registro ---------- -->
+          <div class="auth-panel" id="panel-registro" role="tabpanel" aria-labelledby="tab-registro" hidden>
+            <form class="comprar-form auth-form" id="form-registro" action="#" method="post" novalidate>
+              <label for="reg-nombre">Nombre completo</label>
+              <input type="text" id="reg-nombre" name="nombre" placeholder="Nombre y apellido" autocomplete="name" required>
+              <p class="campo-error" id="reg-nombre-error"></p>
+
+              <label for="reg-email">E-mail</label>
+              <input type="email" id="reg-email" name="email" placeholder="nombre@correo.com" autocomplete="email" required>
+              <p class="campo-error" id="reg-email-error"></p>
+
+              <div class="form-grid-2">
+                <div>
+                  <label for="reg-password">Contraseña</label>
+                  <input type="password" id="reg-password" name="password" autocomplete="new-password" minlength="8" required>
+                  <p class="campo-error" id="reg-password-error"></p>
+                </div>
+                <div>
+                  <label for="reg-password2">Repetir contraseña</label>
+                  <input type="password" id="reg-password2" name="password2" autocomplete="new-password" minlength="8" required>
+                  <p class="campo-error" id="reg-password2-error"></p>
+                </div>
+              </div>
+              <p class="campo-ayuda">Mínimo 8 caracteres. Ambas contraseñas deben coincidir.</p>
+
+              <button type="submit" class="btn btn-primary">Crear cuenta</button>
+            </form>
+          </div>
+        </div>
+
+        <!-- ============ VISTA USUARIO AUTENTICADO: panel de cuenta ============ -->
+        <div class="comprar-form-card" data-vista="usuario" hidden>
+          <h2>¡Hola, <span data-usuario-nombre>usuario</span>!</h2>
+          <p>Iniciaste sesión como <strong data-usuario-email></strong>.</p>
+          <ul class="cuenta-accesos">
+            <li><a href="listado_box.html" class="btn btn-outline btn-block">Ver propiedades y guardar favoritas</a></li>
+            <li><a href="comprar.html" class="btn btn-primary btn-block">Enviar una solicitud de compra</a></li>
+          </ul>
+          <button type="button" class="btn-link" data-accion="cerrar-sesion">Cerrar sesión</button>
+        </div>
+
+        <!-- ============ Lateral: qué cambia al tener cuenta ============ -->
+        <aside class="comprar-resumen">
+          <h2>¿Qué ganás con tu cuenta?</h2>
+          <ul>
+            <li><span>Guardar propiedades favoritas</span></li>
+            <li><span>Formulario de compra con tus datos precargados</span></li>
+            <li><span>Saludo y acceso rápido desde cualquier página</span></li>
+          </ul>
+          <div class="comprar-resumen-nota" data-vista="visitante">
+            <p><strong>Cuentas de prueba</strong> (verificadas contra <code>data/usuarios.json</code>):</p>
+            <p>ana@rninmobiliaria.com / tierraroja26</p>
+            <p>rodrigo@rninmobiliaria.com / posadas2026</p>
+          </div>
+        </aside>
+
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ===================== FOOTER ===================== -->
+  <footer class="site-footer">
+    <p class="footer-logo">RN Inmobiliaria</p>
+    <p>Tu futuro hogar en la tierra roja comienza con un asesoramiento de confianza.</p>
+    <a href="https://wa.me/5493764170186?text=Hola%20RN%20Inmobiliaria.%20Estoy%20interesado%20en%20sus%20servicios.%20Me%20gustar%C3%ADa%20saber%20m%C3%A1s." target="_blank" rel="noopener" class="btn btn-primary">Escribinos por WhatsApp</a>
+    <p class="footer-copy">© 2026 Posadas, Misiones, Argentina</p>
+  </footer>
+
+  <script src="app.js" defer></script>
+</body>
+</html>

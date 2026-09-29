@@ -1,0 +1,19 @@
+{
+  "_nota": "Base de usuarios SIMULADA para el TP. En un sistema real las claves nunca viajan ni se guardan en texto plano: se verifican en el servidor contra un hash.",
+  "usuarios": [
+    {
+      "id": 1,
+      "nombre": "Ana Benítez",
+      "email": "ana@rninmobiliaria.com",
+      "password": "tierraroja26",
+      "rol": "cliente"
+    },
+    {
+      "id": 2,
+      "nombre": "Rodrigo Núñez",
+      "email": "rodrigo@rninmobiliaria.com",
+      "password": "posadas2026",
+      "rol": "agente"
+    }
+  ]
+}
