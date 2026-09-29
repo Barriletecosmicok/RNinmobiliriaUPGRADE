@@ -11,7 +11,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Zilla+Slab:wght@400;500;600;700&family=Public+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
 
-  <link rel="stylesheet" href="style.css?v=3">
+  <link rel="stylesheet" href="style.css?v=4">
 </head>
 <body>
 
@@ -25,6 +25,11 @@
       <label for="menu-toggle" class="menu-toggle-btn" aria-label="Abrir menú de navegación">
         <span></span><span></span><span></span>
       </label>
+
+      <!-- Conmutador de tema claro / oscuro (evento asignado en app.js) -->
+      <button type="button" class="btn-tema" data-accion="alternar-tema" aria-pressed="false" aria-label="Activar modo oscuro">
+        <span class="btn-tema-icono" aria-hidden="true">☾</span>
+      </button>
 
       <nav class="main-nav" aria-label="Navegación principal">
         <ul>
@@ -67,77 +72,20 @@
         <a href="listado_box.html" class="ver-todas">Ver todas las propiedades</a>
       </div>
 
-      <div class="grid-propiedades">
-
-        <article class="card-propiedad">
-          <div class="card-galeria">
-            <div class="card-galeria-scroll">
-              <img src="img/casa-villa-sarita-dormitorio.png" alt="Dormitorio principal con techo de madera">
-              <img src="img/casa-villa-sarita-cocina.png" alt="Cocina y comedor integrados con isla central">
-              <img src="img/casa-villa-sarita-pileta.png" alt="Pileta en el patio de la propiedad">
-              <img src="img/casa-villa-sarita-vestidor.png" alt="Vestidor amplio con estantes de madera">
-              <img src="img/casa-villa-sarita-garage.png" alt="Garage y área de lavado con espacio para auto">
-              <img src="img/casa-villa-sarita-galeria.png" alt="Galería exterior con plantas">
-            </div>
-            <span class="galeria-badge">6 fotos</span>
-          </div>
-          <span class="badge">Casa</span>
-          <button class="btn-favorito" aria-label="Agregar a favoritos">♥</button>
-          <div class="card-contenido">
-            <h3>Casa 3 ambientes con pileta en Villa Sarita</h3>
-            <p class="card-ubicacion">Villa Sarita, Posadas</p>
-            <p class="card-precio">USD 85.000</p>
-            <div class="card-meta">
-              <span>120 m²</span>
-              <span>3 ambientes</span>
-            </div>
-            <a href="producto.html" class="btn btn-outline btn-sm card-ver-ficha">Ver ficha</a>
-          </div>
-        </article>
-
-        <article class="card-propiedad">
-          <div class="card-galeria">
-            <div class="card-galeria-scroll">
-              <img src="img/terreno-itaembe-guazu.png" alt="Vista del espacio exterior del terreno en Itaembé Guazú">
-            </div>
-          </div>
-          <span class="badge">Terreno</span>
-          <button class="btn-favorito" aria-label="Agregar a favoritos">♥</button>
-          <div class="card-contenido">
-            <h3>Terreno baldío en Itaembé Guazú</h3>
-            <p class="card-ubicacion">Itaembé Guazú, Posadas</p>
-            <p class="card-precio">USD 22.000</p>
-            <div class="card-meta">
-              <span>300 m²</span>
-            </div>
-            <a href="producto-terreno-itaembe.html" class="btn btn-outline btn-sm card-ver-ficha">Ver ficha</a>
-          </div>
-        </article>
-
-        <article class="card-propiedad">
-          <div class="card-galeria">
-            <div class="card-galeria-scroll">
-              <img src="img/casa-centro-fachada.png" alt="Fachada de la casa de dos plantas">
-              <img src="img/casa-centro-patio.png" alt="Patio interno con plantas">
-              <img src="img/casa-centro-living.png" alt="Living comedor amplio">
-            </div>
-            <span class="galeria-badge">3 fotos</span>
-          </div>
-          <span class="badge">Casa</span>
-          <button class="btn-favorito" aria-label="Agregar a favoritos">♥</button>
-          <div class="card-contenido">
-            <h3>Casa 2 plantas en Barrio Centro</h3>
-            <p class="card-ubicacion">Centro, Posadas</p>
-            <p class="card-precio">USD 75.000</p>
-            <div class="card-meta">
-              <span>90 m²</span>
-              <span>3 ambientes</span>
-            </div>
-            <a href="producto-centro.html" class="btn btn-outline btn-sm card-ver-ficha">Ver ficha</a>
-          </div>
-        </article>
-
+      <!-- Controles de la galería (eventos asignados en app.js con addEventListener) -->
+      <div class="galeria-controles" role="toolbar" aria-label="Filtrar y resaltar propiedades">
+        <div class="galeria-filtros">
+          <button type="button" class="filtro-chip is-activo" data-filtro="todas" aria-pressed="true">Todas</button>
+          <button type="button" class="filtro-chip" data-filtro="casa" aria-pressed="false">Casas</button>
+          <button type="button" class="filtro-chip" data-filtro="terreno" aria-pressed="false">Terrenos</button>
+        </div>
+        <button type="button" class="filtro-chip filtro-chip--resaltar" data-accion="resaltar-destacadas" aria-pressed="false">★ Resaltar destacadas</button>
       </div>
+
+      <p class="galeria-estado" id="galeria-estado" role="status" aria-live="polite">Cargando propiedades…</p>
+
+      <!-- Las tarjetas se generan desde data/propiedades.json con fetch() -->
+      <div class="grid-propiedades" id="galeria-destacadas" aria-busy="true"></div>
     </section>
 
     <!-- ===================== SERVICIOS ===================== -->
@@ -223,6 +171,25 @@
     </section>
 
   </main>
+
+  <!-- ===================== VISOR DE FOTOS (galería interactiva) ===================== -->
+  <dialog class="visor" id="visor" aria-labelledby="visor-titulo">
+    <div class="visor-contenido">
+      <div class="visor-cabecera">
+        <h2 class="visor-titulo" id="visor-titulo">Fotos</h2>
+        <button type="button" class="visor-btn visor-cerrar" data-visor="cerrar" aria-label="Cerrar galería">✕</button>
+      </div>
+      <figure class="visor-figura">
+        <img id="visor-imagen" src="" alt="">
+        <figcaption id="visor-leyenda"></figcaption>
+      </figure>
+      <div class="visor-navegacion">
+        <button type="button" class="visor-btn" data-visor="anterior" aria-label="Foto anterior">‹</button>
+        <span class="visor-contador" id="visor-contador">1 / 1</span>
+        <button type="button" class="visor-btn" data-visor="siguiente" aria-label="Foto siguiente">›</button>
+      </div>
+    </div>
+  </dialog>
 
   <!-- ===================== FOOTER ===================== -->
   <footer class="site-footer">
