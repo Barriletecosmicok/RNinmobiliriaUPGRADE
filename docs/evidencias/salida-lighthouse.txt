@@ -1,0 +1,20 @@
+=====================================================================
+ AUDITORÍA DE ACCESIBILIDAD — Google Lighthouse
+ SPA: http://localhost:8080/public/index.html
+ Fecha: 12/11/2026, 08:48:53
+=====================================================================
+
+  inicio-visitante     100/100   sin auditorías fallidas
+  catalogo-visitante   100/100   sin auditorías fallidas
+  ficha-visitante      100/100   sin auditorías fallidas
+  acceso-visitante     100/100   sin auditorías fallidas
+  comprar-cliente      100/100   sin auditorías fallidas
+  favoritos-cliente    100/100   sin auditorías fallidas
+  cuenta-cliente       100/100   sin auditorías fallidas
+  panel-agente         100/100   sin auditorías fallidas
+  catalogo-agente      100/100   sin auditorías fallidas
+
+=====================================================================
+ 9 de 9 vistas en 100/100 — puntaje más bajo: 100
+ Reportes HTML en docs/evidencias/lighthouse/
+=====================================================================

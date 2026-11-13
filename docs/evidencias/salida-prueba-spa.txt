@@ -1,0 +1,127 @@
+=====================================================================
+ PRUEBA FUNCIONAL DE LA SPA — RN Inmobiliaria AE4
+ Base: http://localhost:8080/public/index.html
+ Fecha: 12/11/2026, 08:48:04
+=====================================================================
+
+--- 1. PORTADA Y CARGA ASÍNCRONA (UC1) ------------------------------
+OK    [01] La portada es la vista visible al entrar
+        esperado: true  |  obtenido: true
+OK    [02] Las tarjetas se generaron desde la API (no estaban en el HTML)
+        esperado: 3  |  obtenido: 3
+OK    [03] La región aria-live informa el resultado del fetch
+        esperado: Mostrando 3 de 3 propiedades.  |  obtenido: Mostrando 3 de 3 propiedades.
+OK    [04] El contenedor de respuesta tiene aria-live="polite"
+        esperado: polite  |  obtenido: polite
+
+--- 2. OPERACIÓN POR TECLADO ----------------------------------------
+OK    [05] El primer Tab llega al enlace "Saltar al contenido"
+        esperado: 1  |  obtenido: 1
+OK    [06] El enlace de salto se vuelve visible al recibir el foco
+        esperado: true  |  obtenido: true
+OK    [07] Se llega al enlace "Ingresar" solo con Tab
+        esperado: true  |  obtenido: true
+OK    [08] El elemento con foco muestra el anillo de :focus-visible
+        esperado: true  |  obtenido: true
+
+--- 3. INGRESO DE UN CLIENTE CON TAB Y ENTER (UC7) ------------------
+OK    [09] Enter sobre "Ingresar" cambia a la vista de acceso
+        esperado: true  |  obtenido: true
+OK    [10] El foco quedó en el título de la vista nueva
+        esperado: titulo-acceso  |  obtenido: titulo-acceso
+OK    [11] El cambio de vista se anunció en la región aria-live
+        esperado: Sección: Tu cuenta  |  obtenido: Sección: Tu cuenta
+OK    [12] Se llega al botón "Ingresar" del formulario con Tab
+        esperado: true  |  obtenido: true
+OK    [13] El servidor aceptó las credenciales y la alerta avisa el éxito
+        esperado: true  |  obtenido: true
+OK    [14] VSDM: la audiencia pasó a usuario autenticado
+        esperado: usuario  |  obtenido: usuario
+OK    [15] VSDM: el menú ya no ofrece "Ingresar"
+        esperado: true  |  obtenido: true
+OK    [16] VSDM: el menú saluda al usuario con su nombre
+        esperado: Ana  |  obtenido: Ana
+OK    [17] VSDM: el panel del agente no se ofrece a un cliente
+        esperado: true  |  obtenido: true
+
+--- 4. CATÁLOGO, FILTRO Y FICHA (UC2, UC3) --------------------------
+OK    [18] El catálogo muestra las propiedades publicadas
+        esperado: 3  |  obtenido: 3
+OK    [19] El filtro "Casas" pide al servidor y devuelve 2 propiedades
+        esperado: 2  |  obtenido: 2
+OK    [20] El chip activo informa su estado con aria-pressed
+        esperado: true  |  obtenido: true
+OK    [21] La ficha muestra el título que vino de la base
+        esperado: Casa 3 ambientes con pileta en Villa Sarita  |  obtenido: Casa 3 ambientes con pileta en Villa Sarita
+OK    [22] La ficha carga las 6 fotos de la propiedad
+        esperado: 6  |  obtenido: 6
+OK    [23] Toda foto tiene texto alternativo (WCAG 1.1.1)
+        esperado: true  |  obtenido: true
+OK    [24] La ficha ofrece el contacto por WhatsApp (UC5)
+        esperado: true  |  obtenido: true
+
+--- 5. FAVORITOS CONTRA LA BASE DE DATOS (UC8) ----------------------
+OK    [25] La propiedad 1 ya venía marcada, el clic la desmarca
+        esperado: false  |  obtenido: false
+OK    [26] Un segundo clic la vuelve a guardar en el servidor
+        esperado: true  |  obtenido: true
+OK    [27] La vista de favoritos trae la propiedad guardada
+        esperado: 1  |  obtenido: 1
+
+--- 6. SOLICITUD DE COMPRA (UC4) ------------------------------------
+OK    [28] El formulario precarga el nombre de la cuenta
+        esperado: Ana Benítez  |  obtenido: Ana Benítez
+OK    [29] El formulario precarga el e-mail de la cuenta
+        esperado: ana@rninmobiliaria.com  |  obtenido: ana@rninmobiliaria.com
+OK    [30] Las casillas de propiedades se generaron desde la API
+        esperado: 3  |  obtenido: 3
+OK    [31] El servidor registró la solicitud y lo informa en pantalla
+        esperado: true  |  obtenido: true
+OK    [32] El envío sin propiedades marcadas se rechaza con mensaje propio
+        esperado: true  |  obtenido: true
+
+--- 7. CONTROL DE ACCESO: UN CLIENTE NO ES AGENTE -------------------
+OK    [33] El cliente ve el aviso de acceso restringido, no el panel
+        esperado: true  |  obtenido: true
+OK    [34] Aunque fuerce la petición, el servidor responde 403
+        esperado: 403  |  obtenido: 403
+
+--- 8. CRUD DEL AGENTE (UC9) ----------------------------------------
+OK    [35] Al cerrar sesión la audiencia vuelve a visitante
+        esperado: visitante  |  obtenido: visitante
+OK    [36] El ingreso del agente cambia la audiencia a agente
+        esperado: agente  |  obtenido: agente
+OK    [37] El panel lista las propiedades, incluidas las dadas de baja
+        esperado: 3  |  obtenido: 3
+OK    [38] El panel lista las solicitudes recibidas
+        esperado: true  |  obtenido: true
+OK    [39] El alta de propiedad quedó registrada (ahora hay 4 filas)
+        esperado: 4  |  obtenido: 4
+OK    [40] El formulario volvió al estado de alta después de guardar
+        esperado: Crear propiedad  |  obtenido: Crear propiedad
+OK    [41] "Editar" carga la propiedad en el formulario
+        esperado: Local comercial sobre avenida Mitre  |  obtenido: Local comercial sobre avenida Mitre
+OK    [42] El botón de envío cambia a modo edición
+        esperado: Guardar cambios  |  obtenido: Guardar cambios
+OK    [43] La modificación se guardó con el precio nuevo
+        esperado: true  |  obtenido: true
+OK    [44] El servidor rechaza datos inválidos y los marca campo por campo
+        esperado: true  |  obtenido: true
+OK    [45] La baja eliminó la propiedad (vuelven a ser 3 filas)
+        esperado: 3  |  obtenido: 3
+
+--- 9. RUTA INEXISTENTE ---------------------------------------------
+OK    [46] El router muestra la vista de página no encontrada
+        esperado: true  |  obtenido: true
+
+--- 10. CONSOLA DEL NAVEGADOR ---------------------------------------
+OK    [47] No hubo ninguna excepción de JavaScript en toda la sesión
+        esperado: 0  |  obtenido: 0
+
+        Recursos con código de error (4):
+        son los 403 y 400 que esta prueba provoca a propósito,
+        más Google Fonts si el entorno no tiene salida a internet.
+
+=====================================================================
+ RESULTADO: 47 de 47 casos correctos
+=====================================================================
