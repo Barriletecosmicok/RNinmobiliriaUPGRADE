@@ -1,0 +1,650 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>RN Inmobiliaria — Propiedades en venta en Posadas, Misiones</title>
+  <meta name="description" content="Encontrá o vendé tu propiedad en Posadas, Misiones. Casas, departamentos, terrenos y locales comerciales.">
+
+  <!-- Tipografías heredadas del maquetado de la AE1 -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Zilla+Slab:wght@400;500;600;700&family=Public+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="css/estilos.css">
+</head>
+<!--
+  RN Inmobiliaria — AE4 / TIFAS
+  Vista única de la Single Page Application.
+
+  Reglas que cumple este archivo:
+  · Es HTML5 puro: no hay una sola línea de PHP ni un <script> embebido.
+    Toda la dinámica la maneja js/app.js, que se carga al final con defer.
+  · Cada vista es un <section class="vista"> que el router muestra u oculta
+    con el atributo hidden según el hash de la URL (#/propiedades, #/acceso...).
+  · Los contenedores que reciben datos de la API llevan aria-live="polite",
+    así un lector de pantalla anuncia lo que llegó después del fetch().
+  · Toda la interfaz se opera con Tab y Enter: los controles son <button> y
+    <a> nativos, nunca <div> con click.
+-->
+<body>
+
+  <!-- Primer elemento enfocable: salto al contenido (WCAG 2.1, criterio 2.4.1) -->
+  <a class="salto-contenido" href="#contenido">Saltar al contenido principal</a>
+
+  <!-- ===================== CABECERA ===================== -->
+  <header class="site-header">
+    <div class="header-inner">
+      <a href="#/inicio" class="logo">RN <span>Inmobiliaria</span></a>
+
+      <!-- Menú mobile con checkbox: sigue funcionando sin JavaScript -->
+      <input type="checkbox" id="menu-toggle" class="menu-toggle-input">
+      <!-- El elemento <label> no admite aria-label (regla aria-prohibited-attr
+           de axe): el nombre accesible se da con texto oculto a la vista. -->
+      <label for="menu-toggle" class="menu-toggle-btn">
+        <span class="solo-lectores">Abrir menú de navegación</span>
+        <span aria-hidden="true"></span><span aria-hidden="true"></span><span aria-hidden="true"></span>
+      </label>
+
+      <button type="button" class="btn-tema" data-accion="alternar-tema" aria-pressed="false" aria-label="Activar modo oscuro">
+        <span class="btn-tema-icono" aria-hidden="true">☾</span>
+      </button>
+
+      <nav class="main-nav" aria-label="Navegación principal">
+        <ul>
+          <li><a href="#/inicio" data-ruta="inicio">Inicio</a></li>
+          <li><a href="#/propiedades" data-ruta="propiedades">Propiedades</a></li>
+
+          <!-- VSDM: estos ítems existen según la audiencia que mire el sitio.
+               La visibilidad la decide app.js con el dato que devuelve
+               api/sesion.php, no con lo que tenga guardado el navegador. -->
+          <li data-vista="usuario agente" hidden><a href="#/favoritos" data-ruta="favoritos">Favoritos</a></li>
+          <li data-vista="agente" hidden><a href="#/panel" data-ruta="panel">Panel</a></li>
+          <li data-vista="visitante"><a href="#/acceso" data-ruta="acceso">Ingresar</a></li>
+          <li data-vista="usuario agente" hidden class="nav-usuario">
+            <span class="nav-saludo">Hola, <strong data-usuario-nombre>usuario</strong></span>
+            <button type="button" class="btn-link" data-accion="cerrar-sesion">Salir</button>
+          </li>
+          <li class="nav-comprar"><a href="#/comprar" class="btn btn-outline" data-ruta="comprar">Comprar</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Aviso de cambio de vista para lectores de pantalla. Está fuera de <main>
+       para que su contenido no se lea como parte de la página. -->
+  <p id="anuncio-ruta" class="solo-lectores" role="status" aria-live="polite"></p>
+
+  <main id="contenido">
+
+    <!-- ===================================================================
+         VISTA INICIO  —  #/inicio
+         =================================================================== -->
+    <section id="vista-inicio" class="vista" aria-labelledby="titulo-inicio" hidden>
+
+      <div class="hero">
+        <div class="hero-content">
+          <h1 id="titulo-inicio" tabindex="-1">Tu futuro hogar en la tierra roja</h1>
+          <p>Encontrá tu próxima propiedad en Posadas con el respaldo de una inmobiliaria que conoce cada barrio de la ciudad.</p>
+          <div class="hero-actions">
+            <a href="#/propiedades" class="btn btn-primary">Ver propiedades</a>
+            <a href="https://wa.me/5493764170186?text=Hola%20RN%20Inmobiliaria.%20Estoy%20interesado%20en%20sus%20servicios." target="_blank" rel="noopener" class="btn btn-outline-light">Hablemos por WhatsApp</a>
+          </div>
+        </div>
+      </div>
+
+      <section class="propiedades-destacadas">
+        <div class="section-header">
+          <div>
+            <h2>Propiedades destacadas</h2>
+            <p>Últimas oportunidades ingresadas a nuestro catálogo.</p>
+          </div>
+          <a href="#/propiedades" class="ver-todas">Ver todas las propiedades</a>
+        </div>
+
+        <div class="galeria-controles" role="toolbar" aria-label="Filtrar y resaltar propiedades destacadas">
+          <div class="galeria-filtros">
+            <button type="button" class="filtro-chip is-activo" data-filtro-inicio="todas" aria-pressed="true">Todas</button>
+            <button type="button" class="filtro-chip" data-filtro-inicio="casa" aria-pressed="false">Casas</button>
+            <button type="button" class="filtro-chip" data-filtro-inicio="terreno" aria-pressed="false">Terrenos</button>
+          </div>
+          <button type="button" class="filtro-chip filtro-chip--resaltar" data-accion="resaltar-destacadas" aria-pressed="false">★ Resaltar destacadas</button>
+        </div>
+
+        <p class="galeria-estado" id="estado-inicio" role="status" aria-live="polite">Cargando propiedades…</p>
+        <div class="grid-propiedades" id="grilla-inicio"></div>
+      </section>
+
+      <section class="servicios">
+        <div class="section-header section-header--center">
+          <h2>Qué hacemos</h2>
+          <p>Gestión integral para quienes buscan comprar o vender.</p>
+        </div>
+
+        <div class="grid-servicios">
+          <article class="card-servicio">
+            <h3>Venta de propiedades</h3>
+            <ul>
+              <li>Catálogo digital actualizado</li>
+              <li>Difusión en redes</li>
+              <li>Asesoramiento legal</li>
+              <li>Cierre de operaciones</li>
+            </ul>
+          </article>
+
+          <article class="card-servicio">
+            <h3>Administración de alquileres</h3>
+            <ul>
+              <li>Redacción de contratos</li>
+              <li>Cobro mensual</li>
+              <li>Ajustes automáticos (ICL/IPC)</li>
+              <li>Resolución de conflictos</li>
+            </ul>
+          </article>
+
+          <article class="card-servicio">
+            <h3>Tasaciones profesionales</h3>
+            <ul>
+              <li>Análisis de mercado local</li>
+              <li>Visita presencial</li>
+              <li>Entrega de informe</li>
+              <li>Precio real garantizado</li>
+            </ul>
+          </article>
+        </div>
+      </section>
+
+      <section class="nosotros">
+        <div class="nosotros-texto">
+          <h2>Construimos relaciones, no solo ventas</h2>
+          <p>RN Inmobiliaria nació con la visión de profesionalizar el sector inmobiliario en Misiones. Hoy ayudamos a familias y empresas a encontrar su lugar, cuidando su patrimonio con transparencia.</p>
+        </div>
+
+        <div class="nosotros-valores">
+          <div class="valor">
+            <h3>Nuestra misión</h3>
+            <p>Brindar soluciones inmobiliarias ágiles y seguras, protegiendo los intereses de nuestros clientes en cada paso del proceso.</p>
+          </div>
+          <div class="valor">
+            <h3>Nuestra visión</h3>
+            <p>Ser la inmobiliaria referente de Misiones por la innovación tecnológica y la calidad humana.</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="contacto">
+        <div class="contacto-info">
+          <h2>¿Listo para dar el siguiente paso?</h2>
+          <p>Escribinos por WhatsApp o enviá una solicitud de compra desde el catálogo. Te asesoramos sin compromiso.</p>
+          <p><strong>Oficina:</strong> Posadas, Misiones (con cita previa)</p>
+          <p><strong>WhatsApp:</strong> <a href="https://wa.me/5493764170186">+54 9 376 417-0186</a></p>
+          <p class="contacto-acciones">
+            <a href="#/comprar" class="btn btn-primary">Enviar una solicitud de compra</a>
+          </p>
+        </div>
+      </section>
+
+    </section>
+
+    <!-- ===================================================================
+         VISTA CATÁLOGO  —  #/propiedades   (UC1 Consultar catálogo de propiedades)
+         =================================================================== -->
+    <section id="vista-propiedades" class="vista" aria-labelledby="titulo-propiedades" hidden>
+      <div class="page-banner">
+        <div class="page-banner-inner">
+          <p class="breadcrumb"><a href="#/inicio">Inicio</a> / Propiedades</p>
+          <h1 id="titulo-propiedades" tabindex="-1">Propiedades en venta</h1>
+          <p>Todo nuestro catálogo en Posadas y alrededores. Filtrá por tipo de propiedad.</p>
+        </div>
+      </div>
+
+      <div class="catalogo">
+        <h2 class="solo-lectores">Catálogo completo de propiedades</h2>
+
+        <div class="galeria-controles" role="toolbar" aria-label="Filtrar el catálogo por tipo de propiedad">
+          <div class="galeria-filtros">
+            <button type="button" class="filtro-chip is-activo" data-filtro-catalogo="todas" aria-pressed="true">Todas</button>
+            <button type="button" class="filtro-chip" data-filtro-catalogo="casa" aria-pressed="false">Casas</button>
+            <button type="button" class="filtro-chip" data-filtro-catalogo="terreno" aria-pressed="false">Terrenos</button>
+            <button type="button" class="filtro-chip" data-filtro-catalogo="departamento" aria-pressed="false">Departamentos</button>
+            <button type="button" class="filtro-chip" data-filtro-catalogo="local" aria-pressed="false">Locales</button>
+          </div>
+        </div>
+
+        <p class="galeria-estado" id="estado-catalogo" role="status" aria-live="polite">Cargando propiedades…</p>
+        <div class="grid-propiedades" id="grilla-catalogo"></div>
+      </div>
+    </section>
+
+    <!-- ===================================================================
+         VISTA FICHA  —  #/propiedad/:id   (UC3 Ver ficha de una propiedad)
+         =================================================================== -->
+    <section id="vista-propiedad" class="vista" aria-labelledby="titulo-ficha" hidden>
+      <div class="page-banner">
+        <div class="page-banner-inner">
+          <p class="breadcrumb"><a href="#/inicio">Inicio</a> / <a href="#/propiedades">Propiedades</a> / Ficha</p>
+          <h1 id="titulo-ficha" tabindex="-1">Ficha de la propiedad</h1>
+        </div>
+      </div>
+
+      <div class="catalogo">
+        <p class="galeria-estado" id="estado-ficha" role="status" aria-live="polite">Cargando la ficha…</p>
+        <div class="producto-detalle" id="detalle-propiedad"></div>
+      </div>
+    </section>
+
+    <!-- ===================================================================
+         VISTA ACCESO  —  #/acceso   (UC6 Registrarse, UC7 Iniciar y cerrar sesión)
+         =================================================================== -->
+    <section id="vista-acceso" class="vista" aria-labelledby="titulo-acceso" hidden>
+      <div class="page-banner">
+        <div class="page-banner-inner">
+          <p class="breadcrumb"><a href="#/inicio">Inicio</a> / Mi cuenta</p>
+          <h1 id="titulo-acceso" tabindex="-1">Tu cuenta en RN Inmobiliaria</h1>
+          <p>Ingresá o creá una cuenta para guardar propiedades favoritas y enviar solicitudes de compra.</p>
+        </div>
+      </div>
+
+      <div class="catalogo">
+        <div class="comprar-layout">
+
+          <!-- Audiencia visitante: formularios de ingreso y registro -->
+          <div class="comprar-form-card" data-vista="visitante">
+            <div class="auth-tabs" role="tablist" aria-label="Acceso de usuarios">
+              <button type="button" class="auth-tab is-activa" role="tab" id="tab-login"
+                      aria-selected="true" aria-controls="panel-login" data-tab="login">Ingresar</button>
+              <button type="button" class="auth-tab" role="tab" id="tab-registro"
+                      aria-selected="false" aria-controls="panel-registro" tabindex="-1" data-tab="registro">Crear cuenta</button>
+            </div>
+
+            <!-- Respuesta del servidor: el atributo aria-live hace que el
+                 lector de pantalla lea el resultado del fetch() sin que el
+                 usuario tenga que ir a buscarlo -->
+            <div class="form-alerta" id="auth-alerta" role="status" aria-live="polite" hidden></div>
+
+            <div class="auth-panel" id="panel-login" role="tabpanel" aria-labelledby="tab-login">
+              <form class="comprar-form auth-form" id="form-login" novalidate>
+                <label for="login-email">E-mail</label>
+                <input type="email" id="login-email" name="email" placeholder="nombre@correo.com" autocomplete="username" required>
+                <p class="campo-error" id="login-email-error"></p>
+
+                <label for="login-password">Contraseña</label>
+                <input type="password" id="login-password" name="password" autocomplete="current-password" minlength="8" required>
+                <p class="campo-error" id="login-password-error"></p>
+
+                <button type="submit" class="btn btn-primary">Ingresar</button>
+              </form>
+            </div>
+
+            <div class="auth-panel" id="panel-registro" role="tabpanel" aria-labelledby="tab-registro" hidden>
+              <form class="comprar-form auth-form" id="form-registro" novalidate>
+                <label for="reg-nombre">Nombre completo</label>
+                <input type="text" id="reg-nombre" name="nombre" placeholder="Nombre y apellido" autocomplete="name" required>
+                <p class="campo-error" id="reg-nombre-error"></p>
+
+                <label for="reg-email">E-mail</label>
+                <input type="email" id="reg-email" name="email" placeholder="nombre@correo.com" autocomplete="email" required>
+                <p class="campo-error" id="reg-email-error"></p>
+
+                <div class="form-grid-2">
+                  <div>
+                    <label for="reg-password">Contraseña</label>
+                    <input type="password" id="reg-password" name="password" autocomplete="new-password" minlength="8" required>
+                    <p class="campo-error" id="reg-password-error"></p>
+                  </div>
+                  <div>
+                    <label for="reg-password2">Repetir contraseña</label>
+                    <input type="password" id="reg-password2" name="password2" autocomplete="new-password" minlength="8" required>
+                    <p class="campo-error" id="reg-password2-error"></p>
+                  </div>
+                </div>
+                <p class="campo-ayuda">Mínimo 8 caracteres. Ambas contraseñas deben coincidir.</p>
+
+                <button type="submit" class="btn btn-primary">Crear cuenta</button>
+              </form>
+            </div>
+          </div>
+
+          <!-- Audiencia usuario autenticado: panel de cuenta -->
+          <div class="comprar-form-card" data-vista="usuario agente" hidden>
+            <h2>¡Hola, <span data-usuario-nombre>usuario</span>!</h2>
+            <p>Iniciaste sesión como <strong data-usuario-email></strong>.</p>
+            <p data-vista="agente" hidden>Tu cuenta tiene rol de <strong>agente</strong>: podés administrar el catálogo.</p>
+            <ul class="cuenta-accesos">
+              <li><a href="#/propiedades" class="btn btn-outline btn-block">Ver el catálogo</a></li>
+              <li><a href="#/favoritos" class="btn btn-outline btn-block">Mis propiedades favoritas</a></li>
+              <li data-vista="agente" hidden><a href="#/panel" class="btn btn-outline btn-block">Panel del agente</a></li>
+              <li><a href="#/comprar" class="btn btn-primary btn-block">Enviar una solicitud de compra</a></li>
+            </ul>
+            <button type="button" class="btn-link" data-accion="cerrar-sesion">Cerrar sesión</button>
+          </div>
+
+          <aside class="comprar-resumen">
+            <h2>¿Qué ganás con tu cuenta?</h2>
+            <ul>
+              <li><span>Guardar propiedades favoritas en el servidor, no en el navegador</span></li>
+              <li><span>Formulario de compra con tus datos precargados</span></li>
+              <li><span>Seguimiento del estado de tus solicitudes</span></li>
+            </ul>
+            <div class="comprar-resumen-nota" data-vista="visitante">
+              <p><strong>Cuentas de prueba</strong> cargadas por el script de la base:</p>
+              <p>ana@rninmobiliaria.com / tierraroja26 (cliente)</p>
+              <p>rodrigo@rninmobiliaria.com / posadas2026 (agente)</p>
+            </div>
+          </aside>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================================================================
+         VISTA SOLICITUD DE COMPRA  —  #/comprar   (UC4)
+         =================================================================== -->
+    <section id="vista-comprar" class="vista" aria-labelledby="titulo-comprar" hidden>
+      <div class="page-banner">
+        <div class="page-banner-inner">
+          <p class="breadcrumb"><a href="#/inicio">Inicio</a> / Comprar</p>
+          <h1 id="titulo-comprar" tabindex="-1">Solicitud de compra</h1>
+          <p>Completá tus datos y elegí las propiedades que te interesan. Nos contactamos para coordinar los siguientes pasos.</p>
+        </div>
+      </div>
+
+      <div class="catalogo">
+        <div class="comprar-layout">
+
+          <!-- Audiencia visitante: el endpoint exige sesión, así que acá se
+               explica por qué no se ve el formulario -->
+          <div class="comprar-form-card" data-vista="visitante">
+            <h2>Necesitás una cuenta</h2>
+            <p>Las solicitudes quedan asociadas a tu usuario para que puedas seguir su estado, así que primero hay que ingresar.</p>
+            <p><a href="#/acceso" class="btn btn-primary">Ingresar o crear cuenta</a></p>
+          </div>
+
+          <div class="comprar-form-card" data-vista="usuario agente" hidden>
+            <h2>Tus datos</h2>
+            <p class="aviso-cuenta aviso-cuenta--ok">Precargamos tu nombre y e-mail de la cuenta. Revisalos antes de enviar.</p>
+
+            <div class="form-alerta" id="compra-alerta" role="status" aria-live="polite" hidden></div>
+
+            <form class="comprar-form" id="form-compra" novalidate>
+              <div class="form-grid-2">
+                <div>
+                  <label for="compra-nombre">Nombre completo</label>
+                  <input type="text" id="compra-nombre" name="nombre" autocomplete="name" required>
+                  <p class="campo-error" id="compra-nombre-error"></p>
+                </div>
+                <div>
+                  <label for="compra-telefono">Teléfono</label>
+                  <input type="tel" id="compra-telefono" name="telefono" placeholder="+54 9 376 ..." autocomplete="tel" required>
+                  <p class="campo-error" id="compra-telefono-error"></p>
+                </div>
+              </div>
+
+              <label for="compra-direccion">Dirección</label>
+              <input type="text" id="compra-direccion" name="direccion" placeholder="Calle, número, barrio" autocomplete="street-address" required>
+              <p class="campo-error" id="compra-direccion-error"></p>
+
+              <label for="compra-email">E-mail</label>
+              <input type="email" id="compra-email" name="email" autocomplete="email" required>
+              <p class="campo-error" id="compra-email-error"></p>
+
+              <label for="compra-medio-pago">Medio de pago</label>
+              <select id="compra-medio-pago" name="medio_pago" required>
+                <option value="" disabled selected>Seleccioná una opción</option>
+                <option value="efectivo">Efectivo</option>
+                <option value="transferencia">Transferencia bancaria</option>
+                <option value="financiacion">Financiación con la inmobiliaria</option>
+                <option value="credito-hipotecario">Crédito hipotecario</option>
+                <option value="tarjeta">Tarjeta de crédito</option>
+              </select>
+              <p class="campo-error" id="compra-medio-pago-error"></p>
+
+              <fieldset class="productos-fieldset">
+                <legend>Propiedades que te interesan</legend>
+                <p class="galeria-estado" id="estado-compra" role="status" aria-live="polite">Cargando el catálogo…</p>
+                <div class="productos-seleccion" id="compra-propiedades"></div>
+                <p class="campo-error" id="compra-propiedades-error"></p>
+              </fieldset>
+
+              <label for="compra-mensaje">Mensaje (opcional)</label>
+              <textarea id="compra-mensaje" name="mensaje" rows="3" placeholder="Contanos cuándo podrías visitar la propiedad"></textarea>
+
+              <button type="submit" class="btn btn-primary">Enviar solicitud de compra</button>
+            </form>
+          </div>
+
+          <aside class="comprar-resumen">
+            <h2>¿Cómo sigue el proceso?</h2>
+            <ul>
+              <li><span>1. Enviás el formulario</span></li>
+              <li><span>2. Te contactamos por WhatsApp o e-mail</span></li>
+              <li><span>3. Coordinamos la visita a la propiedad</span></li>
+              <li><span>4. Avanzamos con la documentación y el cierre</span></li>
+            </ul>
+            <p class="comprar-resumen-nota">También podés escribirnos al +54 9 376 417-0186 si preferís una respuesta más rápida.</p>
+          </aside>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================================================================
+         VISTA FAVORITOS  —  #/favoritos   (UC8)
+         =================================================================== -->
+    <section id="vista-favoritos" class="vista" aria-labelledby="titulo-favoritos" hidden>
+      <div class="page-banner">
+        <div class="page-banner-inner">
+          <p class="breadcrumb"><a href="#/inicio">Inicio</a> / Favoritos</p>
+          <h1 id="titulo-favoritos" tabindex="-1">Mis propiedades favoritas</h1>
+          <p>Las propiedades que marcaste quedan guardadas en tu cuenta.</p>
+        </div>
+      </div>
+
+      <div class="catalogo">
+        <div class="comprar-form-card" data-vista="visitante">
+          <h2>Necesitás una cuenta</h2>
+          <p>Los favoritos se guardan en el servidor junto a tu usuario. Ingresá para verlos desde cualquier dispositivo.</p>
+          <p><a href="#/acceso" class="btn btn-primary">Ingresar o crear cuenta</a></p>
+        </div>
+
+        <div data-vista="usuario agente" hidden>
+          <h2 class="solo-lectores">Propiedades guardadas en tu cuenta</h2>
+          <p class="galeria-estado" id="estado-favoritos" role="status" aria-live="polite">Cargando tus favoritos…</p>
+          <div class="grid-propiedades" id="grilla-favoritos"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================================================================
+         VISTA PANEL DEL AGENTE  —  #/panel   (UC9 Gestionar propiedades)
+         Sólo visible para el rol agente. La interfaz lo esconde, pero la
+         seguridad real está en el servidor: cada POST, PUT y DELETE vuelve
+         a verificar el rol con $_SESSION.
+         =================================================================== -->
+    <section id="vista-panel" class="vista" aria-labelledby="titulo-panel" hidden>
+      <div class="page-banner">
+        <div class="page-banner-inner">
+          <p class="breadcrumb"><a href="#/inicio">Inicio</a> / Panel</p>
+          <h1 id="titulo-panel" tabindex="-1">Panel del agente</h1>
+          <p>Alta, modificación y baja de propiedades, y seguimiento de las solicitudes recibidas.</p>
+        </div>
+      </div>
+
+      <div class="catalogo">
+        <div class="comprar-form-card" data-vista="visitante usuario">
+          <h2>Acceso restringido</h2>
+          <p>Esta sección es para cuentas con rol de agente. Si administrás el catálogo, ingresá con tu cuenta de agente.</p>
+          <p><a href="#/acceso" class="btn btn-primary">Ir al ingreso</a></p>
+        </div>
+
+        <div data-vista="agente" hidden>
+
+          <div class="form-alerta" id="panel-alerta" role="status" aria-live="polite" hidden></div>
+
+          <!-- -------- Alta y modificación -------- -->
+          <div class="panel-bloque">
+            <h2 id="titulo-form-propiedad">Nueva propiedad</h2>
+            <form class="comprar-form" id="form-propiedad" novalidate>
+              <!-- Guarda el id cuando se está editando; vacío en un alta -->
+              <input type="hidden" id="prop-id" name="id" value="">
+
+              <div class="form-grid-2">
+                <div>
+                  <label for="prop-titulo">Título</label>
+                  <input type="text" id="prop-titulo" name="titulo" required>
+                  <p class="campo-error" id="prop-titulo-error"></p>
+                </div>
+                <div>
+                  <label for="prop-tipo">Tipo</label>
+                  <select id="prop-tipo" name="tipo" required>
+                    <option value="casa">Casa</option>
+                    <option value="terreno">Terreno</option>
+                    <option value="departamento">Departamento</option>
+                    <option value="local">Local comercial</option>
+                  </select>
+                  <p class="campo-error" id="prop-tipo-error"></p>
+                </div>
+              </div>
+
+              <label for="prop-barrio">Barrio y ciudad</label>
+              <input type="text" id="prop-barrio" name="barrio" placeholder="Villa Sarita, Posadas" required>
+              <p class="campo-error" id="prop-barrio-error"></p>
+
+              <div class="form-grid-3">
+                <div>
+                  <label for="prop-precio">Precio en dólares</label>
+                  <input type="number" id="prop-precio" name="precio" min="1" step="100" required>
+                  <p class="campo-error" id="prop-precio-error"></p>
+                </div>
+                <div>
+                  <label for="prop-superficie">Superficie en m²</label>
+                  <input type="number" id="prop-superficie" name="superficie" min="1" step="1" required>
+                  <p class="campo-error" id="prop-superficie-error"></p>
+                </div>
+                <div>
+                  <label for="prop-ambientes">Ambientes</label>
+                  <input type="number" id="prop-ambientes" name="ambientes" min="1" step="1">
+                  <p class="campo-ayuda">Dejalo vacío en terrenos.</p>
+                  <p class="campo-error" id="prop-ambientes-error"></p>
+                </div>
+              </div>
+
+              <label for="prop-descripcion">Descripción</label>
+              <textarea id="prop-descripcion" name="descripcion" rows="3"></textarea>
+
+              <div class="form-casillas">
+                <label class="casilla"><input type="checkbox" id="prop-destacada" name="destacada"> <span>Mostrar como destacada en la portada</span></label>
+                <label class="casilla"><input type="checkbox" id="prop-activa" name="activa" checked> <span>Publicada en el catálogo</span></label>
+              </div>
+
+              <fieldset class="productos-fieldset">
+                <legend>Fotos de la propiedad</legend>
+                <p class="campo-ayuda">Cada foto necesita su texto alternativo: es lo que leen los lectores de pantalla (WCAG 2.1, criterio 1.1.1).</p>
+                <div id="prop-fotos"></div>
+                <button type="button" class="btn btn-outline btn-sm" data-accion="agregar-foto">Agregar otra foto</button>
+                <p class="campo-error" id="prop-fotos-error"></p>
+              </fieldset>
+
+              <div class="panel-form-acciones">
+                <button type="submit" class="btn btn-primary" id="prop-enviar">Crear propiedad</button>
+                <button type="button" class="btn btn-outline" data-accion="cancelar-edicion" hidden id="prop-cancelar">Cancelar edición</button>
+              </div>
+            </form>
+          </div>
+
+          <!-- -------- Listado administrable -------- -->
+          <div class="panel-bloque">
+            <h2>Propiedades cargadas</h2>
+            <p class="galeria-estado" id="estado-panel" role="status" aria-live="polite">Cargando el listado…</p>
+            <div class="tabla-wrapper">
+              <table class="tabla-propiedades" id="tabla-panel">
+                <caption class="solo-lectores">Listado de propiedades con sus acciones de modificación y baja</caption>
+                <thead>
+                  <tr>
+                    <th scope="col">Título</th>
+                    <th scope="col">Tipo</th>
+                    <th scope="col">Barrio</th>
+                    <th scope="col">Precio</th>
+                    <th scope="col">Estado</th>
+                    <th scope="col">Acciones</th>
+                  </tr>
+                </thead>
+                <tbody id="cuerpo-tabla-panel"></tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- -------- Solicitudes recibidas -------- -->
+          <div class="panel-bloque">
+            <h2>Solicitudes de compra recibidas</h2>
+            <p class="galeria-estado" id="estado-solicitudes" role="status" aria-live="polite">Cargando las solicitudes…</p>
+            <div class="tabla-wrapper">
+              <table class="tabla-propiedades" id="tabla-solicitudes">
+                <caption class="solo-lectores">Solicitudes de compra enviadas por los clientes</caption>
+                <thead>
+                  <tr>
+                    <th scope="col">Fecha</th>
+                    <th scope="col">Cliente</th>
+                    <th scope="col">Contacto</th>
+                    <th scope="col">Propiedades</th>
+                    <th scope="col">Medio de pago</th>
+                    <th scope="col">Estado</th>
+                  </tr>
+                </thead>
+                <tbody id="cuerpo-tabla-solicitudes"></tbody>
+              </table>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================================================================
+         VISTA RUTA INEXISTENTE
+         =================================================================== -->
+    <section id="vista-404" class="vista" aria-labelledby="titulo-404" hidden>
+      <div class="page-banner">
+        <div class="page-banner-inner">
+          <p class="breadcrumb"><a href="#/inicio">Inicio</a> / Página no encontrada</p>
+          <h1 id="titulo-404" tabindex="-1">No encontramos esa dirección</h1>
+          <p>El enlace que seguiste no corresponde a ninguna sección del sitio.</p>
+          <p><a href="#/inicio" class="btn btn-primary">Volver al inicio</a></p>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ===================== VISOR DE FOTOS ===================== -->
+  <!-- <dialog> nativo: el navegador se encarga de atrapar el foco adentro
+       mientras está abierto y de cerrarlo con la tecla Escape -->
+  <dialog class="visor" id="visor" aria-labelledby="visor-titulo">
+    <div class="visor-contenido">
+      <div class="visor-cabecera">
+        <h2 class="visor-titulo" id="visor-titulo">Fotos</h2>
+        <button type="button" class="visor-btn visor-cerrar" data-visor="cerrar" aria-label="Cerrar la galería de fotos">✕</button>
+      </div>
+      <figure class="visor-figura">
+        <img id="visor-imagen" src="" alt="">
+        <figcaption id="visor-leyenda"></figcaption>
+      </figure>
+      <div class="visor-navegacion">
+        <button type="button" class="visor-btn" data-visor="anterior" aria-label="Foto anterior">‹</button>
+        <span class="visor-contador" id="visor-contador" role="status" aria-live="polite">1 / 1</span>
+        <button type="button" class="visor-btn" data-visor="siguiente" aria-label="Foto siguiente">›</button>
+      </div>
+    </div>
+  </dialog>
+
+  <!-- ===================== PIE ===================== -->
+  <footer class="site-footer">
+    <p class="footer-logo">RN Inmobiliaria</p>
+    <p>Tu futuro hogar en la tierra roja comienza con un asesoramiento de confianza.</p>
+    <a href="https://wa.me/5493764170186?text=Hola%20RN%20Inmobiliaria.%20Estoy%20interesado%20en%20sus%20servicios." target="_blank" rel="noopener" class="btn btn-primary">Escribinos por WhatsApp</a>
+    <p class="footer-copy">© 2026 Posadas, Misiones, Argentina</p>
+  </footer>
+
+  <script src="js/app.js" defer></script>
+</body>
+</html>
