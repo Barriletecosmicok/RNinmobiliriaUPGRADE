@@ -113,6 +113,11 @@ async function tabularHasta(page, selector, maximo = 40) {
   const pasosSalto = await tabularHasta(page, '.salto-contenido');
   registrar('El primer Tab llega al enlace "Saltar al contenido"', pasosSalto, 1);
 
+  // El enlace entra con una transición CSS de 0,15 s. Sin esta espera el test
+  // lee el valor de "top" a mitad de la animación y falla una vez cada tantas
+  // corridas: era una carrera de la prueba, no un problema de la interfaz.
+  await esperar(400);
+
   registrar('El enlace de salto se vuelve visible al recibir el foco',
     await page.evaluate(() => {
       const el = document.querySelector('.salto-contenido');
