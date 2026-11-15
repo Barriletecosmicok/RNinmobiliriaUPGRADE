@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>RN Inmobiliaria · Defensa AE4 / TIFAS</title>
+  <link rel="icon" href="data:,">
+  <link rel="stylesheet" href="defensa.css">
+</head>
+<body>
+  <!--
+    Presentación de la AE4. Es una herramienta aparte: no forma parte del
+    producto y no toca ni una línea de public/, api/ ni models/.
+    Se abre desde el mismo servidor que la SPA (XAMPP o php -S), porque necesita
+    leer el iframe de la aplicación y eso solo es posible con el mismo origen.
+  -->
+  <header class="barra">
+    <div class="marca">
+      <strong>RN Inmobiliaria</strong>
+      <span>AE4 / TIFAS · Paradigmas III</span>
+    </div>
+    <nav class="secciones" aria-label="Secciones de la presentación" id="secciones"></nav>
+    <div class="herramientas">
+      <button type="button" class="chico" id="btn-vista" title="Alterna página / dividido / código (tecla V)">Vista: dividido</button>
+      <button type="button" class="chico" id="btn-ayuda" title="Atajos de teclado (tecla ?)">?</button>
+    </div>
+  </header>
+
+  <div class="franja" id="franja" role="note"></div>
+
+  <main id="escenario" class="escenario">
+    <!-- Los casos de uso y las secciones por integrante comparten esta escena: página real + código. -->
+    <section id="escena-demo" class="escena-demo" hidden>
+      <div class="lado-pagina" id="lado-pagina">
+        <div class="barra-iframe">
+          <span>Aplicación real en vivo</span>
+          <button type="button" class="chico" id="btn-recargar">Recargar</button>
+        </div>
+        <iframe id="app" title="Aplicación RN Inmobiliaria en funcionamiento" src="about:blank"></iframe>
+      </div>
+      <div class="lado-codigo" id="lado-codigo"></div>
+    </section>
+
+    <section id="escena-hoja" class="escena-hoja" hidden></section>
+  </main>
+
+  <dialog id="visor-dialogo" class="dialogo" aria-labelledby="visor-dialogo-titulo">
+    <div class="dialogo-cabeza">
+      <h2 id="visor-dialogo-titulo">Código</h2>
+      <button type="button" class="chico" id="cerrar-dialogo">Cerrar (Esc)</button>
+    </div>
+    <div id="visor-dialogo-cuerpo"></div>
+  </dialog>
+
+  <dialog id="ayuda-dialogo" class="dialogo dialogo--chico" aria-labelledby="ayuda-titulo">
+    <div class="dialogo-cabeza">
+      <h2 id="ayuda-titulo">Atajos</h2>
+      <button type="button" class="chico" id="cerrar-ayuda">Cerrar (Esc)</button>
+    </div>
+    <ul class="atajos">
+      <li><kbd>1</kbd> a <kbd>8</kbd> cambia de sección</li>
+      <li><kbd>←</kbd> <kbd>→</kbd> caso de uso anterior o siguiente</li>
+      <li><kbd>V</kbd> alterna página, dividido y código</li>
+      <li><kbd>Esc</kbd> cierra el código ampliado</li>
+      <li>Hacé clic en cualquier botón o formulario de la página y el código de esa función aparece solo.</li>
+    </ul>
+  </dialog>
+
+  <script src="datos.js"></script>
+  <script src="contenido.js"></script>
+  <script src="defensa.js"></script>
+</body>
+</html>
