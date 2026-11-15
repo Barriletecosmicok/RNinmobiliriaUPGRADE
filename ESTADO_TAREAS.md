@@ -34,7 +34,8 @@ con OOHDM) y Roa toma la base de datos y el CRUD, que es la parte nueva.
 | 22 | Reflexión individual de cada integrante | Cada uno | **Pendiente** | `docs/BITACORA.md`, sección 4 |
 | 23 | Verificar Lighthouse en la máquina del equipo | Los tres | **Pendiente** | Captura para el informe |
 | 24 | Informe técnico final en PDF | Los tres | **Pendiente** | Capítulos 1, 2 y 3 |
-| 25 | Presentación y guion del coloquio | Los tres | **Pendiente** | — |
+| 25 | Presentación interactiva (herramienta de defensa) | De Olivera | **Primera versión lista** | `defensa/` |
+| 25b | Guion de práctica y guía de estudio del coloquio | Los tres | **Pendiente** | Documentos aparte |
 | 26 | Paquete .ZIP para el Campus Virtual | Los tres | **Pendiente** | Código más `.sql` |
 
 ## Lo que falta y de quién depende

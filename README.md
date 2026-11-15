@@ -295,6 +295,27 @@ La interfaz se opera completa con `Tab` y `Enter`, sin tocar el mouse.
 
 ---
 
+## Presentación interactiva para la defensa
+
+La carpeta `defensa/` tiene una herramienta aparte para el coloquio. No es parte del producto: no toca `public/`, `api/` ni `models/`.
+
+Muestra la aplicación real en un lado y el código en el otro. Al tocar un botón o un formulario de la página, el panel pasa solo a la cadena de esa función: el HTML, el evento y el `fetch`, el endpoint PHP y el modelo con su consulta SQL, siempre con archivo y número de línea. La pestaña "En vivo" registra los pedidos reales con su respuesta. Además tiene una sección por integrante, las pruebas con sus resultados, la auditoría ISO y el reparto de commits.
+
+Para abrirla hay que servirla desde el mismo servidor que la SPA, porque necesita leer el iframe de la aplicación:
+
+```
+http://localhost/<carpeta>/defensa/            (XAMPP)
+http://localhost:8080/defensa/                 (php -S localhost:8080 -t .)
+```
+
+Los fragmentos de código no están copiados a mano: `defensa/generar.py` los corta de los archivos reales y los guarda en `defensa/datos.js`, junto con los resultados de `docs/evidencias/` y el reparto de commits de `git log`. Si se cambia el código, se regenera con:
+
+```
+python3 defensa/generar.py
+```
+
+Si algún fragmento deja de encontrarse, el script falla y dice cuál. Atajos: `1` a `8` cambian de sección, `←` `→` cambian de caso de uso, `V` alterna página, dividido y código, `?` muestra la ayuda.
+
 ## Limitaciones conocidas
 
 Las decimos nosotros antes de que las encuentre la cátedra:
