@@ -269,3 +269,17 @@ kbd { background: #fff; border: 1px solid var(--linea); border-bottom-width: 2px
 .escena-demo[data-modo="dividido"][data-seccion="teclado"],
 .escena-demo[data-modo="dividido"][data-seccion="auditoria"] { grid-template-columns: minmax(660px, 58%) 1fr; }
 .escena-demo[data-modo="dividido"][data-seccion="interrogatorio"] { grid-template-columns: minmax(660px, 46%) 1fr; }
+
+/* ===== versión corta: menos texto, más demostración ===== */
+.pasos-tec { flex-direction: row; flex-wrap: wrap; gap: 5px; }
+.paso-tec button { width: auto; align-items: center; padding: 5px 12px 5px 6px; font-size: 14px; font-weight: 600; border-radius: 999px; }
+.paso-tec .n { width: 22px; height: 22px; font-size: 12px; }
+.porque { margin: 0; padding-left: 18px; font-size: 14.5px; }
+.capas-fila { display: flex; flex-wrap: wrap; gap: 5px; }
+.capa-pill { background: #fff; border: 1px solid var(--linea); border-radius: 999px; padding: 2px 10px; font-size: 12.5px; }
+.capa-pill code { color: var(--tierra); }
+.evol-col { font-size: 14px; padding: 5px 10px; } .evol-col h4 { margin: 0; }
+.iso-dos { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.cifra-grande { padding: 6px 14px; } .cifra-grande strong { font-size: 44px; }
+.receta-lista { margin: 4px 0 2px; padding-left: 20px; font-size: 14px; }
+.lh-lista { display: grid; grid-template-columns: repeat(3, 1fr); gap: 5px; }

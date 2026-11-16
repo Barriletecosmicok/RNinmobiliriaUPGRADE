@@ -272,14 +272,11 @@
       h('strong', { id: 'cnt-' + k }, String(estado.teclas[k])), h('span', null, rotulo));
 
     l.append(
-      h('div', { class: 'caso-cab' },
-        h('h2', null, 'Demostración por teclado'),
-        h('p', { class: 'resuelve' }, C.teclado.ayuda)),
       h('div', { class: 'marcador', role: 'group', 'aria-label': 'Contadores de la demostración' },
         tile('tab', 'Tab'), tile('enter', 'Enter'), tile('mouse', 'Clics de mouse en la página')),
-      h('p', { class: 'foco-actual' }, h('strong', null, 'Foco en: '), h('span', { id: 'foco-texto' }, estado.foco || 'todavía ninguno')),
+      h('p', { class: 'foco-actual' }, h('strong', null, 'Foco: '), h('span', { id: 'foco-texto' }, estado.foco || '—')),
       h('div', { class: 'fila-botones' },
-        h('button', { type: 'button', class: 'chico acento', onclick: darFoco }, 'Dar el foco a la página (F)'),
+        h('button', { type: 'button', class: 'chico acento', onclick: darFoco }, 'Foco a la página (F)'),
         h('button', { type: 'button', class: 'chico', onclick: reiniciarTeclado }, 'Empezar de cero')));
 
     const lista = h('ol', { class: 'pasos-tec' });
@@ -287,16 +284,16 @@
       const hecho = Boolean(estado.hechos[p.id]);
       const actual = p.id === estado.pasoTec;
       lista.append(h('li', { class: 'paso-tec' + (hecho ? ' hecho' : '') + (actual ? ' actual' : '') },
-        h('button', { type: 'button', 'aria-pressed': String(actual), 'aria-label': `${p === C.teclado.opcional ? 'Opcional' : 'Paso ' + (i + 1)}: ${p.tecla}${hecho ? '. Hecho' : ''}`,
+        h('button', { type: 'button', 'aria-pressed': String(actual), title: p.ver,
+          'aria-label': `${p === C.teclado.opcional ? 'Opcional' : 'Paso ' + (i + 1)}: ${p.tecla}${hecho ? '. Hecho' : ''}`,
           onclick: () => { estado.pasoTec = p.id; pintarTeclado(); } },
-          h('span', { class: 'n' }, hecho ? '✓' : (p === C.teclado.opcional ? '+' : String(i + 1))),
-          h('span', { class: 'tx' }, h('strong', null, p.tecla), h('small', null, p.ver)))));
+          h('span', { class: 'n' }, hecho ? '✓' : (p === C.teclado.opcional ? '+' : String(i + 1))), p.tecla)));
     });
     l.append(lista);
 
     const sel = PASOS_TEC.find((p) => p.id === estado.pasoTec);
     l.append(h('div', { class: 'zona-paso' },
-      h('p', { class: 'zona-titulo' }, 'Código que se ejecuta en este paso'),
+      h('p', { class: 'zona-titulo' }, sel.ver),
       crearVisor(snipsDePaso(sel.clave), { sinAutor: true })));
   }
 
@@ -361,46 +358,43 @@
     (estado.auditoria === 'lh' ? auditoriaLighthouse : auditoriaRed)(cuerpo);
   }
 
-  const pasosNumerados = (titulo, items) => h('div', { class: 'receta' }, h('h3', null, titulo), h('ol', null, items.map((t) => h('li', null, t))));
+  const pasosNumerados = (titulo, items) => h('details', { class: 'plegable' }, h('summary', null, titulo), h('ol', { class: 'receta-lista' }, items.map((t) => h('li', null, t))));
 
   function auditoriaLighthouse(c) {
     const todas = D.lighthouse.every((v) => v.puntaje === 100);
     c.append(
-      h('div', { class: 'cifra-grande' }, h('strong', null, todas ? '100' : '—'), h('span', null, `Accesibilidad en las ${D.lighthouse.length} vistas auditadas, incluidas las que exigen sesión de cliente y de agente.`)),
-      pasosNumerados('Cómo mostrarlo en Chrome', C.auditoria.lighthouse),
-      h('h3', null, 'Informes guardados (se abren completos)'),
+      h('div', { class: 'cifra-grande' }, h('strong', null, todas ? '100' : '—'), h('span', null, `Accesibilidad · ${D.lighthouse.length} vistas`)),
+      pasosNumerados('Pasos en Chrome', C.auditoria.lighthouse),
       h('div', { class: 'lh-lista' }, D.lighthouse.map((v) =>
         h('a', { class: 'lh-fila', href: '../docs/evidencias/lighthouse/' + v.vista + '.report.html', target: '_blank', rel: 'noopener' },
-          h('span', { class: 'lh-n' }, String(v.puntaje)), h('span', null, v.vista), h('span', { class: 'lh-ir' }, 'Abrir informe')))),
+          h('span', { class: 'lh-n' }, String(v.puntaje)), h('span', null, v.vista), h('span', { class: 'lh-ir' }, 'Informe')))),
       h('details', { class: 'plegable' },
-        h('summary', null, 'Si preguntan: de 92 a 100, qué se corrigió'),
+        h('summary', null, 'De 92 a 100'),
         h('ul', { class: 'correcciones' }, C.correccionesLighthouse.map((t) => h('li', null, t)))));
   }
 
   function auditoriaRed(c) {
     const rechazos = D.pruebas.api.casos.filter((x) => /obtenido (401|403|409)\b/.test(x.detalle || ''));
     c.append(
-      pasosNumerados('Cómo mostrarlo en Chrome', C.auditoria.red),
-      h('h3', null, 'Los siete endpoints'),
+      pasosNumerados('Pasos en Chrome', C.auditoria.red),
       h('table', { class: 'tabla-ep' },
-        h('thead', null, h('tr', null, ['Archivo', 'Métodos', 'Quién', 'Caso de uso'].map((t) => h('th', { scope: 'col' }, t)))),
-        h('tbody', null, C.auditoria.endpoints.map((e) => h('tr', null, h('td', null, h('code', null, e.ruta)), h('td', null, e.metodos), h('td', null, e.quien), h('td', null, e.uc))))),
+        h('thead', null, h('tr', null, ['Endpoint', 'Métodos', 'Caso de uso'].map((t) => h('th', { scope: 'col' }, t)))),
+        h('tbody', null, C.auditoria.endpoints.map((e) => h('tr', null, h('td', null, h('code', null, e.ruta)), h('td', null, e.metodos), h('td', null, e.uc))))),
       h('details', { class: 'plegable' },
-        h('summary', null, `Pruebas de la API: ${D.pruebas.api.ok} de ${D.pruebas.api.total} correctas. Casos que el servidor rechaza a propósito`),
+        h('summary', null, `API ${D.pruebas.api.ok}/${D.pruebas.api.total} · rechazos 401, 403 y 409`),
         h('div', { class: 'casos' }, rechazos.map((x) => h('div', { class: 'caso-fila ok' },
           h('span', { class: 'marca' }, 'OK'), h('span', { class: 'cn' }, '[' + String(x.n).padStart(2, '0') + ']'),
           h('span', { class: 'ct' }, x.titulo, x.detalle ? h('small', null, x.detalle) : null))))),
-      h('h3', null, 'Pedidos reales de esta página'),
       pintarVivo());
   }
 
   function pintarVivo() {
     const caja = h('div', { class: 'vivo' });
     caja.append(h('div', { class: 'vivo-cab' },
-      h('p', null, 'Cada fetch() de la página aparece acá con su respuesta real. Es un respaldo: la evidencia oficial se muestra en las DevTools.'),
+      h('p', null, 'Pedidos reales de la página'),
       h('button', { type: 'button', class: 'chico', onclick: () => { estado.vivo = []; repintar(); } }, 'Limpiar')));
     if (!estado.vivo.length) {
-      caja.append(h('p', { class: 'vacio' }, 'Todavía no hay pedidos. Usá la página de la izquierda.'));
+      caja.append(h('p', { class: 'vacio' }, 'Usá la página y aparecen acá.'));
       return caja;
     }
     estado.vivo.slice(0, 40).forEach((e) => {
@@ -470,17 +464,12 @@
     };
 
     cuerpo.append(
-      h('details', { class: 'plegable', open: true },
-        h('summary', null, 'Por qué pasamos a una arquitectura MVC desacoplada'),
-        h('ul', { class: 'porque' }, C.mvc.porque.map((t) => h('li', null, t)))),
-      h('details', { class: 'plegable' },
-        h('summary', null, 'Las capas y qué carpeta es cada una'),
-        h('div', { class: 'capas' }, C.capas.map((x) => h('div', { class: 'capa' }, h('strong', null, x.nombre), h('code', null, x.carpeta), h('span', null, x.detalle))))),
+      h('ul', { class: 'porque' }, C.mvc.porque.map((t) => h('li', null, t))),
+      h('div', { class: 'capas-fila' }, C.capas.map((x) => h('span', { class: 'capa-pill' }, x.nombre, ' ', h('code', null, x.carpeta)))),
       h('div', { class: 'chips', role: 'toolbar', 'aria-label': 'Casos de uso' }, lista.map(chip)),
       h('div', { class: 'caso-cab' },
-        h('h2', null, h('span', { class: 'rotulo' }, c.rotulo), ' ', c.titulo, ' ', ' ', h('span', { class: 'nacio' }, 'nació en la ' + C.mvc.nacio[c.id])),
-        h('p', { class: 'resuelve' }, c.resuelve)),
-      h('div', { class: 'evol' }, [['ae1', 'AE1 · HTML estático'], ['ae2', 'AE2 · JS y JSON'], ['ae4', 'AE4 · SPA, API y MySQL']].map(([k, t]) =>
+        h('h2', null, h('span', { class: 'rotulo' }, c.rotulo), ' ', c.titulo, ' ', h('span', { class: 'nacio' }, 'nació en la ' + C.mvc.nacio[c.id]))),
+      h('div', { class: 'evol' }, [['ae1', 'AE1'], ['ae2', 'AE2'], ['ae4', 'AE4']].map(([k, t]) =>
         h('div', { class: 'evol-col evol-' + k }, h('h4', null, t), h('p', null, ev[k])))));
 
     if (c.variantes.length > 1) {
@@ -508,7 +497,7 @@
       if (aviso) zona.append(aviso);
       zona.append(crearVisor(v.pasos[estado.paso], { sinAutor: true }));
     }
-    cuerpo.append(zona, h('div', { class: 'caso-pie' }, h('p', null, v.nota)));
+    cuerpo.append(zona);
   }
 
   /* ---------- B. OWASP línea por línea ---------- */
@@ -565,20 +554,13 @@
       h('div', { class: 'pestanas pestanas-var', role: 'tablist', 'aria-label': 'Áreas del código' },
         C.isoAreas.map((x, i) => h('button', { type: 'button', role: 'tab', 'aria-selected': String(i === estado.iso),
           onclick: () => { estado.iso = i; pintarInterrogatorio(); } }, x.tab))),
-      h('div', { class: 'iso-cab' }, h('p', { class: 'ow-tag' }, 'ISO/IEC 25010'), h('h3', null, a.caracteristica)),
-      bloque('Cómo estaba', h('p', null, a.antes)),
+      h('div', { class: 'iso-cab' }, h('h3', null, a.caracteristica), h('p', { class: 'ow-idea' }, a.antes)),
       bloque('Qué se refactorizó',
         a.cambio === 'LIGHTHOUSE'
-          ? [h('p', null, 'Cuatro correcciones llevaron Lighthouse de 92 a 100:'), h('ol', { class: 'correcciones' }, C.correccionesLighthouse.map((x) => h('li', null, x))), h('p', null, a.extra)]
+          ? [h('ul', { class: 'correcciones' }, [...C.correccionesLighthouse, a.extra].map((x) => h('li', null, x)))]
           : h('ul', { class: 'correcciones' }, a.cambio.map((x) => h('li', null, x)))),
-      bloque('Cómo se midió', h('p', null, a.medicion)),
-      bloque('Lo que todavía no cumple', h('p', null, a.limite)),
-      h('div', { class: 'zona-paso' }, h('p', { class: 'zona-titulo' }, 'Código donde se ve el cambio'), crearVisor(a.snips, { sinAutor: true })),
-      h('details', { class: 'plegable' },
-        h('summary', null, 'Las siete características de la auditoría'),
-        h('ul', { class: 'iso-lista' }, C.iso.map((x) => h('li', null,
-          h('strong', null, `${x.n}. ${x.nombre}`), ' ', x.evidencia, ' ',
-          x.snips ? h('button', { type: 'button', class: 'chico', onclick: () => abrirCodigo(x.snips, x.nombre) }, 'Ver código') : null)))));
+      h('div', { class: 'iso-dos' }, bloque('Cómo se midió', h('p', null, a.medicion)), bloque('Qué falta', h('p', null, a.limite))),
+      h('div', { class: 'zona-paso' }, crearVisor(a.snips, { sinAutor: true })));
   }
 
   /* ===================================================================

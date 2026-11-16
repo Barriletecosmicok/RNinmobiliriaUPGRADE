@@ -1406,7 +1406,7 @@ window.DATOS = {
    "titulo": "feat(defensa): recorrido en 18 láminas que reemplaza las secciones por integrante"
   },
   {
-   "hash": "4b9de2d",
+   "hash": "acbdf12",
    "autor": "Jesus De Olivera",
    "fecha": "16/11/2026",
    "titulo": "feat(defensa): presentacion segun la dinamica del coloquio oral"
