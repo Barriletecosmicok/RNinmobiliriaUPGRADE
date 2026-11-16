@@ -21,6 +21,7 @@
     </div>
     <nav class="secciones" aria-label="Secciones de la presentación" id="secciones"></nav>
     <div class="herramientas">
+      <button type="button" class="chico" id="btn-reloj" aria-pressed="false" title="Cronómetro de la defensa (tecla T inicia o pausa, R reinicia)">⏱ 0:00</button>
       <button type="button" class="chico" id="btn-vista" title="Alterna página / dividido / código (tecla V)">Vista: dividido</button>
       <button type="button" class="chico" id="btn-ayuda" title="Atajos de teclado (tecla ?)">?</button>
     </div>
@@ -29,8 +30,8 @@
   <div class="franja" id="franja" role="note"></div>
 
   <main id="escenario" class="escenario">
-    <!-- Los casos de uso y las secciones por integrante comparten esta escena: página real + código. -->
-    <section id="escena-demo" class="escena-demo" hidden>
+    <!-- Las tres partes del coloquio comparten esta escena: la página real a la izquierda y el código a la derecha. -->
+    <section id="escena-demo" class="escena-demo">
       <div class="lado-pagina" id="lado-pagina">
         <div class="barra-iframe">
           <span>Aplicación real en vivo</span>
@@ -40,8 +41,6 @@
       </div>
       <div class="lado-codigo" id="lado-codigo"></div>
     </section>
-
-    <section id="escena-hoja" class="escena-hoja" hidden></section>
   </main>
 
   <dialog id="visor-dialogo" class="dialogo" aria-labelledby="visor-dialogo-titulo">
@@ -58,11 +57,13 @@
       <button type="button" class="chico" id="cerrar-ayuda">Cerrar (Esc)</button>
     </div>
     <ul class="atajos">
-      <li><kbd>1</kbd> a <kbd>6</kbd> cambia de sección</li>
-      <li><kbd>←</kbd> <kbd>→</kbd> caso de uso o lámina anterior y siguiente</li>
+      <li><kbd>1</kbd> <kbd>2</kbd> <kbd>3</kbd> cambia de parte del coloquio</li>
+      <li><kbd>F</kbd> en la demostración por teclado: pasa el foco a la página</li>
+      <li><kbd>A</kbd> <kbd>B</kbd> <kbd>C</kbd> en el interrogatorio: casos de uso y MVC, OWASP, ISO 25010</li>
+      <li><kbd>←</kbd> <kbd>→</kbd> paso, línea o caso anterior y siguiente</li>
       <li><kbd>V</kbd> alterna página, dividido y código</li>
+      <li><kbd>T</kbd> inicia o pausa el cronómetro, <kbd>R</kbd> lo reinicia</li>
       <li><kbd>Esc</kbd> cierra el código ampliado</li>
-      <li>Hacé clic en cualquier botón o formulario de la página y el código de esa función aparece solo.</li>
     </ul>
   </dialog>
 

@@ -299,7 +299,11 @@ La interfaz se opera completa con `Tab` y `Enter`, sin tocar el mouse.
 
 La carpeta `defensa/` tiene una herramienta aparte para el coloquio. No es parte del producto: no toca `public/`, `api/` ni `models/`.
 
-Muestra la aplicación real en un lado y el código en el otro. Al tocar un botón o un formulario de la página, el panel pasa solo a la cadena de esa función: el HTML, el evento y el `fetch`, el endpoint PHP y el modelo con su consulta SQL, siempre con archivo y número de línea. La pestaña "En vivo" registra los pedidos reales con su respuesta. Además tiene una sección por integrante, las pruebas con sus resultados, la auditoría ISO y el reparto de commits.
+Sigue la estructura del coloquio de defensa oral (punto 7 de la consigna) y mantiene siempre la aplicación real a la izquierda y el código a la derecha. Tiene tres partes:
+
+1. **Demostración por teclado (3 min).** Un panel cuenta las pulsaciones de `Tab` y `Enter` y los clics de mouse dentro de la página (el objetivo es que el contador de mouse quede en 0), muestra qué elemento tiene el foco y tilda cada paso del recorrido a medida que se completa: catálogo, filtro, ficha, ingreso, favorito, solicitud de compra y salida. Cada paso muestra el código que se ejecuta.
+2. **Evidencia de auditoría (2 min).** Los puntajes de Accesibilidad de las nueve vistas con sus informes de Lighthouse, la receta para mostrarlo en las DevTools, la tabla de los siete endpoints y los pedidos reales de la página con su código HTTP y su JSON.
+3. **Interrogatorio oral (5 a 10 min).** Tres temas: de los casos de uso de la AE1 a la arquitectura MVC desacoplada (cada caso con su evolución AE1, AE2 y AE4 y la cadena vista, cliente, controlador y modelo); la remediación OWASP línea por línea (PDO preparado, BCRYPT y `$_SESSION`, con el código resaltado de a una línea y su explicación); y la característica ISO 25010 que más refactorización pidió en cada área del código.
 
 Para abrirla hay que servirla desde el mismo servidor que la SPA, porque necesita leer el iframe de la aplicación:
 
@@ -314,7 +318,7 @@ Los fragmentos de código no están copiados a mano: `defensa/generar.py` los co
 python3 defensa/generar.py
 ```
 
-Si algún fragmento deja de encontrarse, el script falla y dice cuál. Las seis secciones son Inicio, Casos de uso, El recorrido (18 láminas que siguen el camino de un dato: base de datos, servidor, navegador y calidad), Pruebas, ISO 25010 y Repositorio. Atajos: `1` a `6` cambian de sección, `←` `→` cambian de caso de uso o de lámina, `V` alterna página, dividido y código, `?` muestra la ayuda.
+Si algún fragmento deja de encontrarse, el script falla y dice cuál. Atajos: `1` a `3` cambian de parte, `F` pasa el foco a la página en la demostración por teclado, `A` `B` `C` cambian de tema en el interrogatorio, `←` `→` avanzan paso, línea o caso, `V` alterna página, dividido y código, `T` y `R` manejan el cronómetro, `?` muestra la ayuda.
 
 ## Limitaciones conocidas
 

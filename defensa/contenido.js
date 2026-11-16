@@ -1,28 +1,190 @@
 /* Textos de la presentación. El código y los resultados NO están acá: vienen
-   de datos.js, que se genera desde los archivos reales (defensa/generar.py). */
+   de datos.js, que se genera desde los archivos reales (defensa/generar.py).
+   La presentación sigue la dinámica del coloquio de defensa oral (punto 7 de la consigna). */
 window.CONTENIDO = {
 
   secciones: [
-    { id: 'inicio',   nombre: 'Inicio' },
-    { id: 'casos',    nombre: 'Casos de uso' },
-    { id: 'recorrido', nombre: 'El recorrido' },
-    { id: 'pruebas',  nombre: 'Pruebas' },
-    { id: 'iso',      nombre: 'ISO 25010' },
-    { id: 'repo',     nombre: 'Repositorio' },
+    { id: 'teclado',        nombre: 'Demostración por teclado', tiempo: '3 min' },
+    { id: 'auditoria',      nombre: 'Evidencia de auditoría',   tiempo: '2 min' },
+    { id: 'interrogatorio', nombre: 'Interrogatorio oral',      tiempo: '5 a 10 min' },
   ],
 
   franjas: {
-    inicio:   'Qué se implementó: la evolución de la maqueta estática a una SPA con API REST y base de datos. Qué resuelve: las tres limitaciones que dejó la AE2.',
-    casos:    'Tocá cualquier botón o formulario de la página: el panel muestra el HTML, el fetch, el endpoint y la consulta SQL de esa función, con archivo y línea.',
-    recorrido: 'Qué se implementó: el camino completo de un dato, desde la base hasta la pantalla. Qué resuelve: la persistencia real, la seguridad (OWASP) y la accesibilidad (WCAG 2.1) que pedía la AE4.',
-    pruebas:  'Qué se implementó: tres baterías de prueba que corren contra la base real. Qué resuelve: mostrar con evidencia que la API, la SPA y la accesibilidad funcionan.',
-    iso:      'Qué se implementó: la auditoría de las siete características de calidad. Cada fila apunta al código que la sostiene.',
-    repo:     'Qué se implementó: arquitectura en capas, historial de Git repartido entre los tres y guía de despliegue.',
+    teclado:        'Coloquio, punto 1. Se opera la página solo con Tab y Enter. El panel cuenta las teclas y los clics de mouse, muestra dónde está el foco y marca cada caso de uso que se recorrió.',
+    auditoria:      'Coloquio, punto 2. Accesibilidad 100/100 en las nueve vistas y los endpoints RESTful que devuelven JSON, con su código HTTP. La evidencia oficial se muestra en las DevTools de Chrome.',
+    interrogatorio: 'Coloquio, punto 3. Tres temas: de los casos de uso a la arquitectura MVC desacoplada, la remediación OWASP línea por línea, y la característica ISO 25010 que más refactorización pidió.',
   },
 
-  /* ------------------------------------------------------------------ */
-  /* Casos de uso. Cada variante es una cadena completa de punta a punta. */
-  /* ------------------------------------------------------------------ */
+  /* ---------------- 1. Demostración por teclado ---------------- */
+  teclado: {
+    ayuda: 'Apretá F para darle el foco a la página sin usar el mouse. Desde ahí, solo Tab, Enter y el teclado para escribir los datos de los campos.',
+    pasos: [
+      { id: 'salto',    clave: 'salto',   tecla: 'Tab una sola vez',                                  ver: 'Aparece «Saltar al contenido principal» arriba a la izquierda, con el foco visible.' },
+      { id: 'catalogo', clave: 'uc1',     tecla: 'Tab hasta «Propiedades» y Enter',                    ver: 'El catálogo sale de la base de datos.' },
+      { id: 'filtro',   clave: 'uc2',     tecla: 'Tab hasta «Casas» y Enter',                          ver: 'El filtro es un botón: responde a Enter y a la barra espaciadora.' },
+      { id: 'ficha',    clave: 'uc3',     tecla: 'Tab hasta una tarjeta y Enter',                      ver: 'Se abre la ficha con las fotos y el precio.' },
+      { id: 'login',    clave: 'uc7:0',   tecla: 'Tab hasta «Ingresar», escribir los datos y Enter',   ver: 'El menú cambia y aparece «Hola» con el nombre.' },
+      { id: 'favorito', clave: 'uc8',     tecla: 'Tab hasta el corazón y Enter',                       ver: 'El corazón cambia de estado y el cambio queda guardado en la base, atado a la cuenta.' },
+      { id: 'compra',   clave: 'uc4',     tecla: 'Tab hasta «Comprar», completar el formulario y Enter', ver: 'Si un campo falla, el error aparece al lado y se anuncia por aria-live.' },
+      { id: 'salir',    clave: 'uc7:1',   tecla: 'Tab hasta «Salir» y Enter',                          ver: 'La sesión se cierra en el servidor.' },
+    ],
+    opcional: { id: 'panel', clave: 'uc9', tecla: 'Como agente: Tab hasta «Panel» y Enter', ver: 'Alta, edición y baja de propiedades, solo con teclado.' },
+  },
+
+  /* ---------------- 2. Evidencia de auditoría ---------------- */
+  auditoria: {
+    lighthouse: [
+      'Con la aplicación en una pestaña de Chrome, apretá F12.',
+      'Abrí la pestaña Lighthouse y dejá marcada solo la categoría Accessibility.',
+      'Elegí Desktop y tocá «Analyze page load».',
+      'Se ve el círculo con 100. Mostrá que ninguna auditoría quedó fallida.',
+    ],
+    red: [
+      'En la misma ventana de DevTools abrí la pestaña Network y filtrá por Fetch/XHR.',
+      'Recargá la página. Aparece propiedades.php.',
+      'Clic en la petición: en Headers se ve el código 200 y Content-Type: application/json; charset=utf-8.',
+      'En Response o Preview se ve el JSON que devuelve la API.',
+      'Ingresá con una clave mal puesta: esa petición vuelve en 401, también con su JSON.',
+    ],
+    endpoints: [
+      { ruta: 'propiedades.php', metodos: 'GET · POST · PUT · DELETE', quien: 'GET público; el resto solo agente', uc: 'UC1, UC2, UC3, UC9' },
+      { ruta: 'registro.php',    metodos: 'POST',                      quien: 'público',                           uc: 'UC6' },
+      { ruta: 'login.php',       metodos: 'POST',                      quien: 'público',                           uc: 'UC7' },
+      { ruta: 'logout.php',      metodos: 'POST',                      quien: 'público',                           uc: 'UC7' },
+      { ruta: 'sesion.php',      metodos: 'GET',                       quien: 'público',                           uc: 'UC7' },
+      { ruta: 'favoritos.php',   metodos: 'GET · POST · DELETE',       quien: 'con sesión',                        uc: 'UC8' },
+      { ruta: 'solicitudes.php', metodos: 'GET · POST · PATCH',        quien: 'con sesión; PATCH y «todas» solo agente', uc: 'UC4, UC9' },
+    ],
+  },
+
+  /* ---------------- 3. Interrogatorio ---------------- */
+  temas: [
+    { id: 'mvc',   rotulo: 'A', nombre: 'De los casos de uso a MVC' },
+    { id: 'owasp', rotulo: 'B', nombre: 'OWASP línea por línea' },
+    { id: 'iso',   rotulo: 'C', nombre: 'ISO 25010' },
+  ],
+
+  mvc: {
+    porque: [
+      'En la AE1 y la AE2 todo vivía en el navegador: el HTML, los datos en un JSON y hasta las claves. Cualquiera podía abrirlos o cambiar lo que quisiera.',
+      'Con el controlador y el modelo en el servidor, las reglas (quién puede qué, qué dato es válido) se aplican donde nadie las puede tocar.',
+      'El único contrato entre las dos mitades es JSON. La interfaz se puede cambiar sin tocar el servidor, y la API se prueba con curl, sin navegador.',
+      'Cada capa hace una sola cosa, y cada endpoint existe porque un caso de uso lo necesita.',
+    ],
+    nacio: { uc1: 'AE1', uc2: 'AE1', uc3: 'AE1', uc4: 'AE1', uc5: 'AE1', uc6: 'AE2', uc7: 'AE2', uc8: 'AE2', uc9: 'AE4' },
+    evolucion: {
+      uc1: { ae1: 'Tarjetas escritas a mano en dos archivos HTML.', ae2: 'fetch a un JSON del navegador.', ae4: 'GET /api/propiedades.php consulta la tabla propiedades con un LEFT JOIN a fotos.' },
+      uc2: { ae1: 'Filtro con CSS puro.', ae2: 'Filtro en el cliente con classList.', ae4: 'El filtro viaja al servidor: WHERE tipo = :tipo.' },
+      uc3: { ae1: 'Un archivo HTML por propiedad.', ae2: 'Seguía siendo un archivo aparte.', ae4: 'GET /api/propiedades.php?id= y la vista #/propiedad/:id. Agregar una propiedad ya no crea un archivo.' },
+      uc4: { ae1: 'Formulario con action="#": los datos no iban a ningún lado.', ae2: 'Precarga de nombre y e-mail desde sessionStorage.', ae4: 'POST /api/solicitudes.php guarda en dos tablas, dentro de una transacción.' },
+      uc5: { ae1: 'Enlace wa.me con mensaje fijo.', ae2: 'Igual que en la AE1.', ae4: 'El mensaje se arma con el título y el precio reales que devuelve la API. No pasa por el servidor.' },
+      uc6: { ae1: 'No existía.', ae2: 'Guardaba el usuario en localStorage con la clave en texto plano.', ae4: 'POST /api/registro.php inserta en usuarios con hash BCRYPT.' },
+      uc7: { ae1: 'No existía.', ae2: 'Comparaba contra un JSON público.', ae4: 'POST /api/login.php con password_verify y $_SESSION en el servidor.' },
+      uc8: { ae1: 'No existía.', ae2: 'Favoritos en localStorage, por navegador.', ae4: 'Tabla favoritos atada al usuario por clave foránea.' },
+      uc9: { ae1: 'No existía.', ae2: 'No existía.', ae4: 'POST, PUT y DELETE sobre /api/propiedades.php, solo para el rol agente. Es el único caso de uso nuevo de la AE4.' },
+    },
+  },
+
+  owasp: [
+    { id: 'pdo', titulo: 'PDO con consultas preparadas', owasp: 'A03 · Inyección SQL',
+      idea: 'El dato que escribe la persona viaja separado de la consulta. MySQL nunca lo lee como código.',
+      probar: 'En las pruebas de la API, los casos 17 y 18 mandan «\' OR \'1\'=\'1» y un comentario SQL como e-mail. El servidor responde 401 en los dos: lo busca como un e-mail raro y no encuentra a nadie.',
+      archivos: [
+        { snip: 'm_usr_buscar', pasos: [
+          { re: /public function buscarPorEmail/, n: 1, t: 'Recibe el e-mail como un texto. Todavía no toca la base.' },
+          { re: /\$this->db->prepare\(/, n: 6, t: 'prepare() le manda a MySQL la consulta con un hueco en lugar del dato. MySQL la analiza antes de saber qué valor va a entrar.' },
+          { re: /WHERE email = :email/, n: 1, t: 'El hueco se llama :email. Es un marcador con nombre: ahí no se pega nada de lo que escribió la persona.' },
+          { re: /->execute\(\[':email'/, n: 1, t: 'Recién ahora viaja el valor, por un camino aparte. Aunque alguien escriba «\' OR 1=1 --», MySQL lo trata como un dato y no como parte de la consulta.' },
+          { re: /\$fila = \$sentencia->fetch\(\)/, n: 1, t: 'Trae una sola fila como arreglo. Si no hay ninguna, devuelve false.' },
+          { re: /return \$fila === false/, n: 1, t: 'Si no hay usuario devuelve null. El login lo trata igual que una clave incorrecta.' },
+        ] },
+        { snip: 'c_conexion', pasos: [
+          { re: /private static \?PDO \$instancia/, n: 1, t: 'Una sola conexión para todo el pedido: se crea la primera vez y se reutiliza.' },
+          { re: /PDO::ATTR_ERRMODE/, n: 1, t: 'Los errores de SQL se vuelven excepciones. Cada endpoint las atrapa y contesta 500 sin mostrar datos internos.' },
+          { re: /PDO::ATTR_DEFAULT_FETCH_MODE/, n: 1, t: 'Cada fila llega como arreglo asociativo, lista para convertir a JSON.' },
+          { re: /PDO::ATTR_EMULATE_PREPARES/, n: 1, t: 'La línea clave. En false, las consultas preparadas las arma el motor de MySQL y no PHP, así que los parámetros nunca se mezclan con el texto de la consulta.' },
+        ] },
+      ] },
+    { id: 'bcrypt', titulo: 'BCRYPT para las claves', owasp: 'A02 · Fallas criptográficas',
+      idea: 'La clave nunca se guarda: se guarda un hash que no se puede revertir. Para comprobarla se vuelve a calcular y se compara.',
+      probar: 'En phpMyAdmin, en la tabla usuarios, la columna password tiene textos de 60 caracteres que empiezan con $2y$10$. Ni el equipo puede leer las claves.',
+      archivos: [
+        { snip: 'a_registro', pasos: [
+          { re: /\$password\s+= isset/, n: 1, t: 'La clave llega en texto plano solo hasta acá. No se guarda ni se escribe en ningún log.' },
+          { re: /strlen\(\$password\) < 8/, n: 3, t: 'El servidor valida: mínimo 8 caracteres. La validación del navegador ayuda, pero cualquiera puede mandar un POST sin formulario. La que cuenta es esta.' },
+          { re: /existeEmail/, n: 3, t: 'Si ya hay una cuenta con ese e-mail, responde 409 y no crea nada.' },
+          { re: /password_hash\(/, n: 1, t: 'Convierte la clave en un hash BCRYPT de 60 caracteres. Lleva su propia sal y un costo (10 por defecto). No se puede revertir.' },
+          { re: /\$modelo->crear\(/, n: 1, t: 'A la base va el hash, nunca la clave. Por eso la columna es VARCHAR(255): hay lugar de sobra por si el algoritmo se alarga.' },
+          { re: /abrirSesionUsuario\(\$usuario\)/, n: 1, t: 'Deja la sesión abierta. Es el paso a $_SESSION, el tema que sigue.' },
+        ] },
+        { snip: 'a_login', pasos: [
+          { re: /if \(\$email === ''/, n: 3, t: 'Si falta el e-mail o la clave, responde 400.' },
+          { re: /buscarPorEmail/, n: 1, t: 'Busca el usuario con la consulta preparada del tema anterior.' },
+          { re: /password_verify/, n: 3, t: 'password_verify toma lo que escribió la persona, lo hashea con la misma sal del hash guardado y compara. Nunca se descifra nada. Si el usuario no existe o la clave no coincide, sale el mismo 401 y el mismo mensaje: el login no sirve para averiguar qué e-mails tienen cuenta.' },
+          { re: /\$publico = \[/, n: 6, t: 'Se arma un arreglo sin la clave. El hash no sale del servidor.' },
+          { re: /abrirSesionUsuario\(\$publico\)/, n: 1, t: 'Abre la sesión del usuario.' },
+          { re: /exito\(200/, n: 1, t: 'Responde 200 con los datos públicos del usuario.' },
+        ] },
+      ] },
+    { id: 'sesion', titulo: '$_SESSION en el servidor', owasp: 'A01 · Control de acceso · A07 · Identificación',
+      idea: 'Quién es cada persona se guarda en el servidor. El navegador solo lleva un número de sesión, y cada recurso protegido lo revisa.',
+      probar: 'En la consola del navegador: fetch(\'../api/favoritos.php\').then(r => r.status) da 401 sin sesión. Con la cuenta del cliente, un POST a propiedades.php da 403.',
+      archivos: [
+        { snip: 'c_iniciar', pasos: [
+          { re: /session_status\(\) === PHP_SESSION_ACTIVE/, n: 3, t: 'Si la sesión ya está abierta, no la abre de nuevo.' },
+          { re: /'httponly' => true/, n: 1, t: 'JavaScript no puede leer la cookie. Si alguien lograra meter un script en la página, no se lleva la sesión.' },
+          { re: /'samesite' => 'Lax'/, n: 1, t: 'La cookie no viaja en pedidos que vienen de otros sitios: frena una parte de los ataques CSRF.' },
+          { re: /'secure' => true/, n: 1, t: 'Quedó comentado a propósito: se activa cuando el sitio se publique con HTTPS. Es una limitación conocida.' },
+          { re: /session_start\(\)/, n: 1, t: 'Recién acá PHP arranca la sesión y le da al navegador su PHPSESSID.' },
+        ] },
+        { snip: 'c_abrir', pasos: [
+          { re: /session_regenerate_id\(true\)/, n: 1, t: 'Cambia el número de sesión y borra el anterior. Si un atacante conocía el viejo, deja de servirle (fijación de sesión). Se hace antes de guardar al usuario.' },
+          { re: /\$_SESSION\['usuario'\] = \[/, n: 6, t: 'Acá está $_SESSION: quién es la persona queda guardado en el servidor. El navegador solo conserva el número de sesión, no sus datos ni su rol.' },
+          { re: /\$_SESSION\['iniciada_en'\]/, n: 1, t: 'Guarda cuándo empezó la sesión.' },
+        ] },
+        { snip: 'c_sesion', pasos: [
+          { re: /usuarioEnSesion\(\)/, n: 1, t: 'Mira $_SESSION para saber quién hace el pedido.' },
+          { re: /if \(\$usuario === null\)/, n: 3, t: 'Si no hay nadie, corta con 401: «no sé quién sos». Todos los endpoints protegidos empiezan por esta guarda.' },
+        ] },
+        { snip: 'c_rol', pasos: [
+          { re: /\$usuario = exigirSesion\(\)/, n: 1, t: 'Primero exige sesión: sin ella, 401.' },
+          { re: /\$usuario\['rol'\] !== \$rol/, n: 3, t: 'Hay sesión, pero el rol no alcanza: 403, «te conozco, pero esto no es para vos». Un cliente que intenta borrar una propiedad recibe esto.' },
+        ] },
+      ] },
+  ],
+
+  /* La característica de ISO 25010 que más refactorización pidió, según el código de cada área. */
+  isoAreas: [
+    { id: 'sesion', tab: 'Sesión y acceso', caracteristica: 'Seguridad (OWASP)',
+      antes: 'En la AE2 las claves quedaban en texto plano dentro de un JSON y la «sesión» era un valor del navegador: esconder un botón era toda la protección.',
+      cambio: [
+        'Las claves pasaron a BCRYPT, con password_hash y password_verify.',
+        'La sesión vive en el servidor, en $_SESSION, con cookie HttpOnly y SameSite=Lax.',
+        'Al iniciar sesión se renueva el número de sesión con session_regenerate_id.',
+        'Las guardas devuelven 401 sin sesión y 403 con rol insuficiente, aunque alguien fuerce el fetch.',
+      ],
+      medicion: 'Los 53 casos de la API incluyen el 401 y el 403 y dos intentos de inyección SQL (casos 17 y 18). Una prueba de la SPA fuerza un fetch al panel con una cuenta de cliente.',
+      limite: 'No hay token anti-CSRF (la mitigación es SameSite=Lax), ni HTTPS en el entorno local, ni límite de intentos de login.',
+      snips: ['a_registro', 'a_login', 'c_abrir', 'c_sesion', 'c_rol'] },
+    { id: 'datos', tab: 'Datos y modelos', caracteristica: 'Fiabilidad',
+      antes: 'En la AE2 los datos eran un JSON y no había nada que pudiera quedar a medias. Con MySQL, un alta toca dos tablas y puede fallar en el medio.',
+      cambio: [
+        'El alta y la modificación de propiedades, y las solicitudes de compra, van en una transacción: si algo falla, rollBack y no queda nada a medias.',
+        'Una PDOException nunca llega al cliente: se registra en el servidor y la persona recibe un 500 con un mensaje genérico.',
+        'Cada código HTTP tiene su caso de prueba.',
+      ],
+      medicion: 'Los 53 casos de la API cubren el alta, la modificación, la baja, la baja repetida (404), el alta con datos repetidos (409) y el registro duplicado (409).',
+      limite: 'Ninguna prueba corta la base a mitad de una operación: el rollBack se justifica leyendo el código.',
+      snips: ['m_crear', 'm_sol_crear'] },
+    { id: 'interfaz', tab: 'Interfaz', caracteristica: 'Usabilidad y accesibilidad',
+      antes: 'La maqueta de la AE1 arrancó en 92 en Lighthouse. Fue la característica que más refactorización exigió.',
+      cambio: 'LIGHTHOUSE',
+      extra: 'Y una corrección que salió de la propia prueba de teclado: el router movía el foco al título también en la primera carga, así que el primer Tab no caía en «Saltar al contenido». Ahora el foco solo se mueve en los cambios de vista posteriores.',
+      medicion: 'Lighthouse da 100/100 en las nueve vistas, incluidas las de cliente y agente con sesión. La prueba de la SPA recorre los casos con Tab y Enter.',
+      limite: 'Lighthouse no reemplaza una prueba con personas que usan lector de pantalla. Las imágenes pesan unos 2 MB cada una; no afecta la accesibilidad, pero sí hundiría el puntaje de Rendimiento.',
+      snips: ['x_foco', 'h_salto', 'x_lectores', 'x_movimiento'] },
+  ],
+
   casos: [
     {
       id: 'uc1', rotulo: 'UC1', titulo: 'Consultar el catálogo', ruta: '#/propiedades',
@@ -143,7 +305,6 @@ window.CONTENIDO = {
     },
   ],
 
-  /* Funciones de interfaz que no son un caso de uso pero también se explican. */
   extras: [
     { id: 'x-visor', rotulo: 'Visor', titulo: 'Visor de fotos', ruta: '#/propiedad/1',
       resuelve: 'Un <dialog> nativo: el navegador atrapa el foco y cierra con Esc sin librerías.',
@@ -163,134 +324,22 @@ window.CONTENIDO = {
       variantes: [{ nombre: 'Router', pasos: { html: ['h_menu'], js: ['j_vista', 'j_ruta'] }, nota: 'Cambia el menú según la sesión: visitante, cliente o agente.' }] },
   ],
 
-  /* ------------------------------------------------------------------ */
-  /* El recorrido: láminas que siguen un solo hilo, de la base a la      */
-  /* pantalla. Cada una tiene una idea, el requisito que resuelve y su   */
-  /* código real.                                                        */
-  /* ------------------------------------------------------------------ */
-  etapas: [
-    { id: 'base',      nombre: 'Base de datos' },
-    { id: 'servidor',  nombre: 'Servidor' },
-    { id: 'navegador', nombre: 'Navegador' },
-    { id: 'calidad',   nombre: 'Calidad' },
-  ],
-  recorrido: [
-    { capa: 'base', titulo: 'Los datos viven en una base',
-      idea: 'Antes el catálogo era un archivo dentro del navegador. Ahora hay seis tablas en MySQL y todos los navegadores ven lo mismo.',
-      resuelve: 'Persistencia real. Claves foráneas entre las tablas, y una clave UNIQUE en favoritos para que no se repitan.',
-      snips: ['t_usuarios', 't_propiedades', 't_fotos', 't_favoritos', 't_solicitudes', 't_solicitud_propiedad'] },
-    { capa: 'servidor', titulo: 'Una sola conexión, con cuidado',
-      idea: 'El servidor se conecta una vez por pedido. Si algo falla, corta con un error claro en vez de seguir a medias.',
-      resuelve: 'PDO con EMULATE_PREPARES apagado: la base recibe los parámetros por separado de la consulta.',
-      snips: ['c_conexion'] },
-    { capa: 'servidor', titulo: 'Las consultas viajan preparadas',
-      idea: 'Lo que escribe la persona nunca se pega dentro del SQL. Va aparte, con un nombre como :email.',
-      resuelve: 'OWASP A03, inyección SQL. Las pruebas de la API incluyen tres intentos de inyección y los tres fallan.',
-      snips: ['m_usr_buscar', 'm_listar'] },
-    { capa: 'servidor', titulo: 'Una sola forma de responder',
-      idea: 'Todos los endpoints contestan en JSON y con el código HTTP que corresponde a lo que pasó.',
-      resuelve: 'Una función arma la cabecera, el código y el cuerpo. No hay dos endpoints que respondan distinto.',
-      snips: ['c_respuesta'] },
-    { capa: 'servidor', titulo: 'El catálogo y el CRUD',
-      idea: 'Ver propiedades es público. Crearlas, editarlas y borrarlas es solo para el agente.',
-      resuelve: 'Los cuatro verbos HTTP sobre un mismo recurso, con validación en el servidor.',
-      snips: ['p_get', 'p_post', 'p_put', 'p_delete'], uc: 'uc9' },
-    { capa: 'servidor', titulo: 'Quién sos: login y sesión',
-      idea: 'El servidor compara la clave con password_verify y, al entrar, cambia el número de sesión.',
-      resuelve: 'OWASP A07. Cookie HttpOnly y SameSite, session_regenerate_id(true), y el mismo mensaje si falla el e-mail o la clave.',
-      snips: ['a_login', 'c_abrir', 'c_iniciar'], uc: 'uc7' },
-    { capa: 'servidor', titulo: 'Las claves no se guardan',
-      idea: 'Al registrarse se guarda un hash BCRYPT, no la clave. Si el e-mail ya existe, el servidor contesta 409.',
-      resuelve: 'OWASP A02. La columna es VARCHAR(255) para que el hash entre aunque el algoritmo cambie.',
-      snips: ['a_registro', 'm_usr_crear'], uc: 'uc6' },
-    { capa: 'servidor', titulo: 'Qué podés hacer: 401 y 403',
-      idea: 'Sin sesión es 401. Con sesión pero sin el rol que hace falta, 403. Lo decide el servidor, no el botón.',
-      resuelve: 'OWASP A01, control de acceso. Esconder un botón no alcanza; la API rechaza el pedido igual.',
-      snips: ['c_sesion', 'c_rol'] },
-    { capa: 'servidor', titulo: 'Todo o nada: transacciones',
-      idea: 'Una solicitud o una propiedad nueva toca dos tablas. Si algo falla a la mitad, se deshace todo.',
-      resuelve: 'beginTransaction y rollBack: nunca queda una solicitud sin sus propiedades.',
-      snips: ['m_sol_crear', 'm_crear'], uc: 'uc4' },
-    { capa: 'servidor', titulo: 'Los favoritos de cada persona',
-      idea: 'El usuario sale de la sesión, no de lo que manda el navegador. Nadie puede guardar favoritos a nombre de otro.',
-      resuelve: 'INSERT IGNORE más la clave UNIQUE evitan duplicados.',
-      snips: ['a_fav', 'm_fav_add'], uc: 'uc8' },
-    { capa: 'navegador', titulo: 'El navegador pide con fetch',
-      idea: 'Una función central hace todos los pedidos, manda la cookie y, si el servidor responde 401, la pantalla se sincroniza.',
-      resuelve: 'fetch con async/await, como pide la consigna. Un único lugar para manejar los errores.',
-      snips: ['j_pedir'] },
-    { capa: 'navegador', titulo: 'Se dibuja sin riesgo',
-      idea: 'Todo dato que llega entra como texto con textContent. Si una propiedad se llamara <img onerror>, se vería ese texto y nada más.',
-      resuelve: 'OWASP A03, XSS. No se usa innerHTML con datos del servidor.',
-      snips: ['j_crear'] },
-    { capa: 'navegador', titulo: 'Una sola página, varias vistas',
-      idea: 'El router por hash cambia de vista sin recargar y mueve el foco al título. El menú se adapta a la sesión.',
-      resuelve: 'SPA real. Visitante, cliente y agente ven menús distintos, pero quien decide es el servidor.',
-      snips: ['j_ruta', 'j_vista', 'h_menu'], uc: 'x-ruta' },
-    { capa: 'navegador', titulo: 'Formularios que explican el error',
-      idea: 'Valida en el navegador por comodidad y muestra, campo por campo, los errores que devuelve el servidor.',
-      resuelve: 'Los mensajes quedan en regiones aria-live, así que un lector de pantalla los anuncia.',
-      snips: ['h_login', 'j_login'], uc: 'uc7' },
-    { capa: 'navegador', titulo: 'El panel del agente',
-      idea: 'Alta, edición, baja y cambio de estado de las solicitudes, con un solo listener para todos los botones.',
-      resuelve: 'Los eventos se delegan en un contenedor, así los botones nuevos funcionan sin volver a engancharlos.',
-      snips: ['j_prop', 'j_elim', 'j_estado', 'j_deleg'], uc: 'uc9' },
-    { capa: 'navegador', titulo: 'Visor de fotos con dialog',
-      idea: 'El elemento dialog del navegador atrapa el foco y se cierra con Esc. No hizo falta escribir esa parte.',
-      resuelve: 'Operable solo con teclado: flechas para cambiar de foto, Esc para cerrar.',
-      snips: ['h_visor', 'j_visor'], uc: 'x-visor' },
-    { capa: 'calidad', titulo: 'Pensado para todas las personas',
-      idea: 'Enlace para saltar al contenido, anuncios para lectores de pantalla, foco visible y respeto por quien pide menos movimiento.',
-      resuelve: 'WCAG 2.1. Lighthouse da 100/100 en nueve vistas, incluidas las del cliente y las del agente con sesión.',
-      snips: ['h_salto', 'h_live', 'x_foco', 'x_lectores', 'x_movimiento'] },
-    { capa: 'calidad', titulo: 'Y todo se prueba',
-      idea: 'Tres baterías corren contra la base real: la API, la SPA con el teclado y la accesibilidad.',
-      resuelve: 'Casos que tienen que salir bien y casos que tienen que ser rechazados, con la evidencia guardada.',
-      ir: 'pruebas' },
-  ],
-
-  /* ------------------------------------------------------------------ */
-  /* Inicio                                                              */
-  /* ------------------------------------------------------------------ */
   limitaciones: [
     { ae2: 'Las contraseñas quedaban en texto plano dentro de un JSON.', ae4: 'BCRYPT con password_hash y password_verify. La columna es VARCHAR(255).', snip: 'a_registro' },
     { ae2: 'Ocultar elementos en el navegador no protege nada.', ae4: 'Sesión en el servidor. Las guardas devuelven 401 y 403 aunque alguien fuerce el fetch.', snip: 'c_sesion' },
     { ae2: 'Los datos existían solo en cada navegador.', ae4: 'Base MySQL con seis tablas. Todos los navegadores ven lo mismo.', snip: 't_favoritos' },
   ],
 
-  requisitos: [
-    { grupo: 'Frontend', texto: 'SPA en JavaScript Vanilla con fetch y async/await', snip: 'j_pedir' },
-    { grupo: 'Frontend', texto: 'Datos del servidor con .textContent, no con innerHTML', snip: 'j_crear' },
-    { grupo: 'Frontend', texto: 'Regiones aria-live="polite" para anunciar respuestas', snip: 'h_live' },
-    { grupo: 'Frontend', texto: ':focus-visible y operación solo con teclado', snip: 'x_foco' },
-    { grupo: 'Backend', texto: 'Content-Type: application/json y http_response_code', snip: 'c_respuesta' },
-    { grupo: 'Backend', texto: 'PDO con sentencias preparadas y marcadores nombrados', snip: 'm_usr_buscar' },
-    { grupo: 'Backend', texto: 'try/catch de PDOException con transacción', snip: 'm_crear' },
-    { grupo: 'Seguridad', texto: 'password_hash con BCRYPT', snip: 'a_registro' },
-    { grupo: 'Seguridad', texto: 'password_verify en el login', snip: 'a_login' },
-    { grupo: 'Seguridad', texto: 'Columna password en VARCHAR(255)', snip: 't_usuarios' },
-    { grupo: 'Seguridad', texto: 'session_start y $_SESSION', snip: 'c_iniciar' },
-    { grupo: 'Seguridad', texto: 'session_regenerate_id(true)', snip: 'c_abrir' },
-    { grupo: 'Seguridad', texto: '401 ante acceso anónimo', snip: 'c_sesion' },
-    { grupo: 'Entrega', texto: 'Auditoría ISO/IEC 25010 con las siete características', ir: 'iso' },
-    { grupo: 'Entrega', texto: 'Lighthouse de accesibilidad en 100/100', ir: 'pruebas' },
-    { grupo: 'Entrega', texto: 'Repositorio con commits repartidos, README y guía de XAMPP', ir: 'repo' },
-  ],
-
-  /* ------------------------------------------------------------------ */
-  /* ISO/IEC 25010                                                       */
-  /* ------------------------------------------------------------------ */
   iso: [
-    { n: 1, nombre: 'Adecuación funcional', evidencia: 'Los nueve casos de uso tienen endpoint y prueba. 53 de 53 casos de la API y 47 de 47 de la SPA pasan.', ir: 'pruebas' },
+    { n: 1, nombre: 'Adecuación funcional', evidencia: 'Los nueve casos de uso tienen endpoint y prueba. 53 de 53 casos de la API y 47 de 47 de la SPA pasan.' },
     { n: 2, nombre: 'Eficiencia de desempeño', evidencia: 'Propiedades y fotos en una sola consulta con LEFT JOIN. Las vistas cambian sin recargar la página.', snips: ['m_listar'] },
     { n: 3, nombre: 'Compatibilidad', evidencia: 'Cliente y servidor desacoplados por un contrato JSON. La API se probó con curl, sin navegador.', snips: ['c_respuesta'] },
     { n: 4, nombre: 'Fiabilidad', evidencia: 'Bloques try/catch de PDOException y tres transacciones con rollBack. Códigos HTTP probados uno por uno.', snips: ['m_crear', 'm_sol_crear'] },
     { n: 5, nombre: 'Seguridad (OWASP)', evidencia: 'BCRYPT, sentencias preparadas, sesión en el servidor, 401 y 403 probados, textContent contra XSS.', snips: ['a_login', 'c_abrir', 'c_sesion', 'j_crear'] },
-    { n: 6, nombre: 'Usabilidad y accesibilidad', evidencia: 'Lighthouse da 100/100 en 9 vistas, incluidas las de cliente y agente con sesión. Es la característica que más refactorización exigió: arrancó en 92.', snips: ['x_foco', 'h_salto', 'h_live'], ir: 'pruebas' },
-    { n: 7, nombre: 'Mantenibilidad', evidencia: 'Cuatro capas, un modelo por entidad y un endpoint por recurso. Historial de Git repartido entre los tres.', ir: 'repo' },
+    { n: 6, nombre: 'Usabilidad y accesibilidad', evidencia: 'Lighthouse da 100/100 en 9 vistas, incluidas las de cliente y agente con sesión. Es la característica que más refactorización exigió: arrancó en 92.', snips: ['x_foco', 'h_salto', 'h_live'] },
+    { n: 7, nombre: 'Mantenibilidad', evidencia: 'Cuatro capas, un modelo por entidad y un endpoint por recurso. Historial de Git repartido entre los tres.' },
   ],
 
-  /* Las 4 correcciones que llevaron Lighthouse de 92 a 100 (bitácora). */
   correccionesLighthouse: [
     'Contraste del verde grisáceo (4,27:1) y del ocre (2,77:1) por debajo del mínimo de 4,5:1: se separaron los colores de texto de los de fondo.',
     'Un <label> con aria-label, algo que ese elemento no admite.',
@@ -298,7 +347,6 @@ window.CONTENIDO = {
     'Salto de h1 a h3 en el catálogo.',
   ],
 
-  /* Capas de la arquitectura. */
   capas: [
     { nombre: 'Vista', carpeta: 'public/', detalle: 'index.html, js/app.js, css/estilos.css, img/', autor: 'Jesús' },
     { nombre: 'Controlador', carpeta: 'api/', detalle: 'siete endpoints REST que responden JSON', autor: 'Calamari y Roa' },
@@ -307,15 +355,6 @@ window.CONTENIDO = {
     { nombre: 'Base de datos', carpeta: 'database/', detalle: 'rn_inmobiliaria.sql: seis tablas y datos de prueba', autor: 'Roa' },
   ],
 
-  despliegue: [
-    'Instalar XAMPP y encender Apache y MySQL desde el panel de control.',
-    'Copiar la carpeta del proyecto dentro de htdocs.',
-    'Importar database/rn_inmobiliaria.sql desde phpMyAdmin o con el cliente de MySQL.',
-    'Abrir http://localhost/<carpeta>/public/index.html.',
-    'Para esta presentación: http://localhost/<carpeta>/defensa/.',
-  ],
-
-  /* Notas al margen de líneas clave. [expresión, texto] */
   notas: {
     j_pedir:   [[/credentials/, 'Manda la cookie de sesión de PHP'], [/await fetch/, 'El fetch real de toda la aplicación'], [/401/, 'Si el servidor dice 401, la interfaz se sincroniza']],
     j_crear:   [[/textContent/, 'Texto, nunca HTML: frena el XSS']],

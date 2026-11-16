@@ -1398,6 +1398,18 @@ window.DATOS = {
    "autor": "Jesus De Olivera",
    "fecha": "15/11/2026",
    "titulo": "docs: README, estado de tareas y bitacora con la presentacion de la defensa"
+  },
+  {
+   "hash": "5b5af92",
+   "autor": "Jesus De Olivera",
+   "fecha": "16/11/2026",
+   "titulo": "feat(defensa): recorrido en 18 láminas que reemplaza las secciones por integrante"
+  },
+  {
+   "hash": "4b9de2d",
+   "autor": "Jesus De Olivera",
+   "fecha": "16/11/2026",
+   "titulo": "feat(defensa): presentacion segun la dinamica del coloquio oral"
   }
  ],
  "lighthouse": [
