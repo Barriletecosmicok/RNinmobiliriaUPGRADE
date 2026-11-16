@@ -118,14 +118,28 @@ code, pre, .codigo { font-family: ui-monospace, "Cascadia Mono", Consolas, Menlo
 .req { display: grid; grid-template-columns: 78px 1fr auto; gap: 10px; align-items: center; background: #fff; border: 1px solid var(--linea); border-radius: 6px; padding: 7px 10px; }
 .req .grupo { font-size: 11px; font-weight: 700; text-transform: uppercase; color: var(--musgo); }
 
-.persona { display: grid; grid-template-columns: minmax(280px, 34%) 1fr; gap: 24px; align-items: start; }
-.persona-resumen { margin: 0 0 6px; } .persona-datos { margin: 0 0 12px; color: var(--suave); font-size: 13px; }
-.piezas { display: grid; gap: 5px; }
-.pieza { display: flex; gap: 10px; text-align: left; background: #fff; border: 1px solid var(--linea); border-radius: 6px; padding: 7px 10px; color: var(--tinta); }
-.pieza .idx { color: var(--tierra); font-weight: 700; width: 18px; flex: none; }
-.pieza[aria-pressed="true"] { border-color: var(--tierra); background: #fbf1ea; font-weight: 600; }
-.pieza-cab { margin-bottom: 10px; } .pieza-cab h3 { margin: 0 0 4px; font-size: 18px; } .pieza-cab p { margin: 0 0 8px; }
-.persona-visor { min-width: 0; position: sticky; top: 0; }
+.recorrido { display: flex; flex-direction: column; gap: 14px; min-height: 100%; }
+.rec-riel { list-style: none; margin: 0; padding: 0; display: flex; gap: 6px; flex-wrap: wrap; }
+.rec-etapa { background: #fff; border: 1px solid var(--linea); border-radius: 999px; padding: 4px 14px; font-size: 13px; color: var(--suave); }
+.rec-etapa[aria-current="step"] { background: var(--musgo); border-color: var(--musgo); color: #fff; font-weight: 600; }
+.rec-cuerpo { display: grid; grid-template-columns: minmax(300px, 36%) 1fr; gap: 28px; align-items: start; flex: 1; }
+.rec-texto h1 { font-size: 30px; line-height: 1.15; margin: 4px 0 12px; }
+.rec-capa { margin: 0; font-size: 12px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: var(--tierra-osc); }
+.rec-idea { font-size: 18px; line-height: 1.45; margin: 0 0 16px; }
+.rec-resuelve { background: #fff; border: 1px solid var(--linea); border-left: 4px solid var(--musgo); border-radius: 6px; padding: 10px 14px; margin-bottom: 14px; }
+.rec-resuelve strong { font-size: 12px; text-transform: uppercase; letter-spacing: .05em; color: var(--musgo); }
+.rec-resuelve p { margin: 4px 0 0; }
+.rec-codigo { min-width: 0; }
+.rec-sin-codigo { background: #fff; border: 1px solid var(--linea); border-radius: var(--radio); padding: 36px 24px; display: flex; flex-wrap: wrap; gap: 28px; justify-content: space-around; text-align: center; }
+.rec-cifra { display: flex; flex-direction: column; gap: 4px; max-width: 200px; }
+.rec-cifra strong { font-size: 52px; line-height: 1; color: var(--musgo); }
+.rec-pie { display: flex; align-items: center; gap: 14px; position: sticky; bottom: 0; background: var(--papel); padding: 10px 0 2px; border-top: 1px solid var(--linea); }
+.rec-puntos { display: flex; gap: 5px; flex: 1; flex-wrap: wrap; justify-content: center; }
+.rec-punto { width: 14px; height: 14px; padding: 0; border-radius: 50%; border: 2px solid var(--linea); background: #fff; }
+.rec-punto.hecho { background: var(--linea); }
+.rec-punto[aria-current="true"] { border-color: var(--tierra); background: var(--tierra); transform: scale(1.25); }
+.rec-cuenta { font-size: 13px; color: var(--suave); min-width: 56px; text-align: right; }
+.rec-pie .chico:disabled { opacity: .4; cursor: default; }
 
 .baterias { display: flex; flex-wrap: wrap; gap: 12px; margin: 10px 0 14px; }
 .bateria { display: flex; flex-direction: column; align-items: flex-start; background: #fff; border: 2px solid var(--linea); border-radius: var(--radio); padding: 10px 18px; min-width: 190px; text-align: left; color: var(--tinta); }
@@ -172,7 +186,7 @@ kbd { background: #fff; border: 1px solid var(--linea); border-bottom-width: 2px
 
 @media (max-width: 900px) {
   .escena-demo { grid-template-columns: 1fr; grid-template-rows: 40% 1fr; }
-  .persona { grid-template-columns: 1fr; } .persona-visor { position: static; }
+  .rec-cuerpo { grid-template-columns: 1fr; }
   .iso-fila summary, .capa, .tabla-sencilla .fila { grid-template-columns: 1fr; }
   .marca span { display: none; }
 }

@@ -1374,6 +1374,30 @@ window.DATOS = {
    "autor": "Jesus De Olivera",
    "fecha": "13/11/2026",
    "titulo": "test(spa): estabiliza el caso del enlace de salto al contenido"
+  },
+  {
+   "hash": "5eaeed5",
+   "autor": "Jesus De Olivera",
+   "fecha": "15/11/2026",
+   "titulo": "feat(defensa): generador de fragmentos desde los archivos reales"
+  },
+  {
+   "hash": "c69d38f",
+   "autor": "Jesus De Olivera",
+   "fecha": "15/11/2026",
+   "titulo": "docs(defensa): textos de los casos de uso, integrantes, ISO y repositorio"
+  },
+  {
+   "hash": "6890263",
+   "autor": "Jesus De Olivera",
+   "fecha": "15/11/2026",
+   "titulo": "feat(defensa): presentacion interactiva con la aplicacion en vivo"
+  },
+  {
+   "hash": "90fc051",
+   "autor": "Jesus De Olivera",
+   "fecha": "15/11/2026",
+   "titulo": "docs: README, estado de tareas y bitacora con la presentacion de la defensa"
   }
  ],
  "lighthouse": [

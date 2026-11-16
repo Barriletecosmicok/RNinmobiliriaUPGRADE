@@ -101,7 +101,7 @@
   }
 
   /** Visor con pestañas si hay más de un fragmento. */
-  function crearVisor(claves) {
+  function crearVisor(claves, opciones = {}) {
     const raiz = h('div', { class: 'visor' });
     const cuerpo = h('div', { class: 'visor-cuerpo' });
     const mostrar = (clave, boton) => {
@@ -111,7 +111,7 @@
         h('div', { class: 'meta' },
           h('code', { class: 'ruta' }, s.archivo),
           h('span', null, `líneas ${s.desde} a ${s.hasta}`),
-          h('span', { class: 'autor autor-' + corto(s.autor) }, corto(s.autor)),
+          opciones.sinAutor ? null : h('span', { class: 'autor autor-' + corto(s.autor) }, corto(s.autor)),
           h('button', { type: 'button', class: 'chico', onclick: (e) => copiar(`${s.archivo}:${s.desde}`, e.currentTarget) }, 'Copiar ruta')),
         lineasDeCodigo(clave));
       if (boton) {
@@ -138,7 +138,7 @@
   }
 
   /* ===== estado ===== */
-  const estado = { seccion: 'inicio', caso: 'uc1', variante: 0, paso: 'html', modo: 'dividido', vivo: [] };
+  const estado = { seccion: 'inicio', caso: 'uc1', variante: 0, paso: 'html', modo: 'dividido', vivo: [], lamina: 0 };
   const TODOS = [...C.casos, ...C.extras];
   const casoPorId = (id) => TODOS.find((c) => c.id === id);
   const NOMBRES_PASO = { html: 'Vista (HTML)', js: 'Evento y fetch (JS)', api: 'Endpoint (PHP)', datos: 'Modelo y SQL' };
@@ -168,8 +168,7 @@
     } else {
       const hoja = vaciar($('#escena-hoja'));
       hoja.className = 'escena-hoja hoja-' + id;
-      ({ inicio: pintarInicio, calamari: () => pintarPersona('calamari'), roa: () => pintarPersona('roa'),
-         jesus: () => pintarPersona('jesus'), pruebas: pintarPruebas, iso: pintarIso, repo: pintarRepo })[id](hoja);
+      ({ inicio: pintarInicio, recorrido: pintarRecorrido, pruebas: pintarPruebas, iso: pintarIso, repo: pintarRepo })[id](hoja);
       hoja.scrollTop = 0;
     }
     history.replaceState(null, '', '#' + id);
@@ -441,42 +440,58 @@
   $('#btn-vista').addEventListener('click', ciclarModo);
 
   /* ===================================================================
-     SECCIONES POR INTEGRANTE
+     EL RECORRIDO: láminas que siguen un hilo, de la base a la pantalla
      =================================================================== */
-  function pintarPersona(id) {
-    const p = C.personas[id];
-    const mios = D.commits.filter((c) => c.autor === p.autor).length;
-    const visorZona = h('div', { class: 'persona-visor' });
-    const lista = h('div', { class: 'piezas', role: 'list' });
+  function pintarRecorrido(hoja) {
+    const L = C.recorrido;
+    const total = L.length;
+    const riel = h('ol', { class: 'rec-riel', 'aria-label': 'Etapas del recorrido' });
+    const cuerpo = h('div', { class: 'rec-cuerpo' });
+    const anterior = h('button', { type: 'button', class: 'chico', onclick: () => ir(estado.lamina - 1) }, '← Anterior');
+    const siguiente = h('button', { type: 'button', class: 'chico acento', onclick: () => ir(estado.lamina + 1) }, 'Siguiente →');
+    const cuenta = h('span', { class: 'rec-cuenta', 'aria-live': 'polite' });
+    const puntos = h('div', { class: 'rec-puntos', role: 'group', 'aria-label': 'Ir a una lámina' });
 
-    const elegir = (pieza, boton) => {
-      lista.querySelectorAll('button.pieza').forEach((b) => b.setAttribute('aria-pressed', String(b === boton)));
-      vaciar(visorZona);
-      if (pieza.snips) {
-        visorZona.append(h('div', { class: 'pieza-cab' },
-          h('h3', null, pieza.titulo), h('p', null, pieza.resuelve),
-          pieza.uc ? h('button', { type: 'button', class: 'chico acento', onclick: () => seleccionarCaso(pieza.uc, 0, { navegar: true }) }, 'Probarlo en la página') : null),
-          crearVisor(pieza.snips));
-      } else {
-        visorZona.append(h('div', { class: 'pieza-cab' }, h('h3', null, pieza.titulo), h('p', null, pieza.resuelve),
-          h('button', { type: 'button', class: 'chico acento', onclick: () => irASeccion(pieza.ir) }, 'Ir a ' + C.secciones.find((s) => s.id === pieza.ir).nombre)));
-      }
-    };
-    p.piezas.forEach((pieza, i) => {
-      const b = h('button', { type: 'button', class: 'pieza', 'aria-pressed': 'false', onclick: (e) => elegir(pieza, e.currentTarget) },
-        h('span', { class: 'idx' }, String(i + 1)), h('span', null, pieza.titulo));
-      lista.append(b);
+    L.forEach((l, i) => puntos.append(h('button', {
+      type: 'button', class: 'rec-punto etapa-' + l.capa, 'aria-label': `Lámina ${i + 1}: ${l.titulo}`,
+      onclick: () => ir(i),
+    })));
+    C.etapas.forEach((e) => {
+      const primera = L.findIndex((l) => l.capa === e.id);
+      riel.append(h('li', null, h('button', { type: 'button', class: 'rec-etapa', 'data-etapa': e.id, onclick: () => ir(primera) }, e.nombre)));
     });
 
-    $('#escena-hoja').append(h('div', { class: 'persona' },
-      h('div', { class: 'persona-lado' },
-        h('h1', null, p.nombre),
-        h('p', { class: 'persona-resumen' }, p.resumen),
-        h('p', { class: 'persona-datos' }, `${mios} commits en la rama ae4-tifas`),
-        lista),
-      visorZona));
-    elegir(p.piezas[0], lista.querySelector('button.pieza'));
-    lista.querySelector('button.pieza').setAttribute('aria-pressed', 'true');
+    function ir(n) {
+      if (n < 0 || n >= total) return;
+      estado.lamina = n;
+      const l = L[n];
+      const etapa = C.etapas.find((e) => e.id === l.capa);
+      riel.querySelectorAll('.rec-etapa').forEach((b) => {
+        if (b.dataset.etapa === l.capa) b.setAttribute('aria-current', 'step'); else b.removeAttribute('aria-current');
+      });
+      puntos.querySelectorAll('.rec-punto').forEach((b, i) => {
+        b.classList.toggle('hecho', i < n);
+        if (i === n) b.setAttribute('aria-current', 'true'); else b.removeAttribute('aria-current');
+      });
+      cuenta.textContent = `${n + 1} de ${total}`;
+      anterior.disabled = n === 0;
+      siguiente.disabled = n === total - 1;
+      vaciar(cuerpo);
+      const texto = h('div', { class: 'rec-texto' },
+        h('p', { class: 'rec-capa etapa-' + l.capa }, etapa.nombre),
+        h('h1', null, l.titulo),
+        h('p', { class: 'rec-idea' }, l.idea),
+        h('div', { class: 'rec-resuelve' }, h('strong', null, 'Qué resuelve'), h('p', null, l.resuelve)));
+      if (l.uc) texto.append(h('button', { type: 'button', class: 'chico acento', onclick: () => seleccionarCaso(l.uc, 0, { navegar: true }) }, 'Probarlo en la página'));
+      if (l.ir) texto.append(h('button', { type: 'button', class: 'chico acento', onclick: () => irASeccion(l.ir) }, 'Ir a ' + C.secciones.find((s) => s.id === l.ir).nombre));
+      cuerpo.append(texto, h('div', { class: 'rec-codigo' }, l.snips ? crearVisor(l.snips, { sinAutor: true })
+        : h('div', { class: 'rec-sin-codigo' },
+          ...[['53', 'casos de la API'], ['47', 'casos de la interfaz, con teclado'], ['9', 'vistas con 100/100 en accesibilidad']]
+            .map(([n, t]) => h('div', { class: 'rec-cifra' }, h('strong', null, n), h('span', null, t))))));
+    }
+
+    hoja.append(h('div', { class: 'recorrido' }, riel, cuerpo, h('div', { class: 'rec-pie' }, anterior, puntos, cuenta, siguiente)));
+    ir(Math.min(estado.lamina || 0, total - 1));
   }
 
   /* ===================================================================
@@ -485,9 +500,9 @@
   function pintarPruebas(hoja) {
     const ruta = 'docs/evidencias/';
     const bat = [
-      { id: 'api', titulo: 'API REST', quien: 'Calamari', datos: D.pruebas.api, como: 'bash docs/evidencias/prueba-api.sh', que: 'curl contra MySQL real: casos válidos, inválidos, anónimos, de rol insuficiente y tres intentos de inyección SQL.' },
-      { id: 'spa', titulo: 'SPA de punta a punta', quien: 'Jesús', datos: D.pruebas.spa, como: 'node docs/evidencias/prueba-spa.js', que: 'Chrome sin ventana operado con Tab y Enter, sobre los nueve casos de uso y la consola del navegador.' },
-      { id: 'lh', titulo: 'Lighthouse (accesibilidad)', quien: 'Jesús', datos: null, como: 'node docs/evidencias/auditar-accesibilidad.js', que: 'Nueve vistas, incluidas las que exigen sesión de cliente y de agente.' },
+      { id: 'api', titulo: 'API REST', datos: D.pruebas.api, como: 'bash docs/evidencias/prueba-api.sh', que: 'curl contra MySQL real: casos válidos, inválidos, anónimos, de rol insuficiente y tres intentos de inyección SQL.' },
+      { id: 'spa', titulo: 'SPA de punta a punta', datos: D.pruebas.spa, como: 'node docs/evidencias/prueba-spa.js', que: 'Chrome sin ventana operado con Tab y Enter, sobre los nueve casos de uso y la consola del navegador.' },
+      { id: 'lh', titulo: 'Lighthouse (accesibilidad)', datos: null, como: 'node docs/evidencias/auditar-accesibilidad.js', que: 'Nueve vistas, incluidas las que exigen sesión de cliente y de agente.' },
     ];
     let activa = 'api';
     const tarjetas = h('div', { class: 'baterias' });
@@ -496,7 +511,7 @@
     const pintarDetalle = () => {
       vaciar(detalle);
       const b = bat.find((x) => x.id === activa);
-      detalle.append(h('p', { class: 'bat-que' }, b.que), h('p', { class: 'bat-como' }, 'Se corre con ', h('code', null, b.como), ' · responsable: ' + b.quien));
+      detalle.append(h('p', { class: 'bat-que' }, b.que), h('p', { class: 'bat-como' }, 'Se corre con ', h('code', null, b.como)));
       if (activa === 'lh') {
         detalle.append(h('div', { class: 'lh-lista' }, D.lighthouse.map((v) =>
           h('a', { class: 'lh-fila', href: '../' + ruta + 'lighthouse/' + v.vista + '.report.html', target: '_blank', rel: 'noopener' },
@@ -584,9 +599,12 @@
     if (t && /^(INPUT|TEXTAREA|SELECT)$/.test(t.tagName)) return;
     if (ev.ctrlKey || ev.metaKey || ev.altKey) return;
     if (dialogo.open || $('#ayuda-dialogo').open) return;
-    if (/^[1-8]$/.test(ev.key)) { irASeccion(C.secciones[Number(ev.key) - 1].id); ev.preventDefault(); return; }
+    if (/^[1-9]$/.test(ev.key) && C.secciones[Number(ev.key) - 1]) { irASeccion(C.secciones[Number(ev.key) - 1].id); ev.preventDefault(); return; }
     if (ev.key === 'v' || ev.key === 'V') { ciclarModo(); return; }
     if (ev.key === '?') { $('#ayuda-dialogo').showModal(); return; }
+    if (estado.seccion === 'recorrido' && (ev.key === 'ArrowRight' || ev.key === 'ArrowLeft') && !(t && t.closest && t.closest('.codigo'))) {
+      const b = document.querySelectorAll('.rec-pie .chico'); (ev.key === 'ArrowRight' ? b[1] : b[0]).click(); ev.preventDefault(); return;
+    }
     if (estado.seccion === 'casos' && (ev.key === 'ArrowRight' || ev.key === 'ArrowLeft') && !(t && t.getAttribute && t.getAttribute('role') === 'tab')) {
       const i = TODOS.findIndex((c) => c.id === estado.caso);
       const j = (i + (ev.key === 'ArrowRight' ? 1 : -1) + TODOS.length) % TODOS.length;

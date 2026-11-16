@@ -314,7 +314,7 @@ Los fragmentos de código no están copiados a mano: `defensa/generar.py` los co
 python3 defensa/generar.py
 ```
 
-Si algún fragmento deja de encontrarse, el script falla y dice cuál. Atajos: `1` a `8` cambian de sección, `←` `→` cambian de caso de uso, `V` alterna página, dividido y código, `?` muestra la ayuda.
+Si algún fragmento deja de encontrarse, el script falla y dice cuál. Las seis secciones son Inicio, Casos de uso, El recorrido (18 láminas que siguen el camino de un dato: base de datos, servidor, navegador y calidad), Pruebas, ISO 25010 y Repositorio. Atajos: `1` a `6` cambian de sección, `←` `→` cambian de caso de uso o de lámina, `V` alterna página, dividido y código, `?` muestra la ayuda.
 
 ## Limitaciones conocidas
 
