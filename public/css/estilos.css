@@ -32,11 +32,20 @@ ul {
   --color-papel: #FBF8F1;
   --color-tinta: #1C1A15;
   --color-ocre: #C98A2C;
+  /* Tokens de TEXTO: el mismo color no sirve para fondo y para letra, porque
+     el contraste se mide contra lo que tiene detrás. Agregados en la AE4
+     para llegar a 4.5:1 sin perder la identidad visual de la AE1. */
+  --color-ocre-texto: #875C1D;   /* 5.53:1 sobre papel */
+  --color-tierra-texto: #A63C1E; /* 6.02:1 sobre papel */
+  /* Sobre los bloques verdes (header, hero, banner, pie) el fondo es
+     oscuro, así que ahí el texto tiene que ser claro, no oscuro. */
+  --color-ocre-sobre-selva: #DDA24C;  /* 5.53:1 sobre selva */
+  --color-musgo-sobre-selva: #B9C3BB; /* 6.85:1 sobre selva */
 
   /* Estados / derivados */
   --color-selva-claro: #2E5745;
   --color-tierra-oscuro: #7C2C15;
-  --color-musgo: #6B7A6E;
+  --color-musgo: #5C695F;   /* oscurecido en AE4: 4.27:1 -> 5.44:1 sobre papel (WCAG 1.4.3) */
   --color-borde: #DDD2BA;
   --color-sobre-selva: #EFE6D3; /* texto claro sobre bloques verdes (no cambia con el tema) */
   --color-exito-fondo: #E3EEE7;
@@ -177,7 +186,7 @@ textarea:focus-visible {
   color: white;
 }
 .logo span {
-  color: var(--color-ocre);
+  color: var(--color-ocre-sobre-selva);
 }
 
 .main-nav ul {
@@ -191,11 +200,11 @@ textarea:focus-visible {
   font-weight: 500;
 }
 .main-nav a:hover {
-  color: var(--color-ocre);
+  color: var(--color-ocre-texto);
 }
 
 .main-nav a.active {
-  color: var(--color-ocre);
+  color: var(--color-ocre-texto);
   border-bottom: 2px solid var(--color-ocre);
   padding-bottom: 2px;
 }
@@ -277,7 +286,7 @@ textarea:focus-visible {
   font-weight: 600;
 }
 .breadcrumb a:hover {
-  color: var(--color-ocre);
+  color: var(--color-ocre-texto);
 }
 
 .page-banner h1 {
@@ -315,7 +324,7 @@ textarea:focus-visible {
 
 .ver-todas {
   font-weight: 600;
-  color: var(--color-tierra);
+  color: var(--color-tierra-texto);
   white-space: nowrap;
 }
 .ver-todas:hover {
@@ -466,7 +475,7 @@ textarea:focus-visible {
   width: 36px;
   height: 36px;
   font-size: 1.125rem;
-  color: var(--color-tierra);
+  color: var(--color-tierra-texto);
   cursor: pointer;
 }
 
@@ -484,7 +493,7 @@ textarea:focus-visible {
 }
 
 .card-precio {
-  color: var(--color-ocre);
+  color: var(--color-ocre-texto);
   font-family: var(--font-display);
   font-size: 1.25rem;
   font-weight: 700;
@@ -526,13 +535,30 @@ textarea:focus-visible {
   background-color: var(--color-selva);
 }
 
-.tabla-propiedades th {
+/* El blanco corresponde sólo al encabezado, que va sobre el verde selva.
+   En la AE4 el cuerpo de la tabla también usa <th scope="row"> para el
+   título de cada fila, y ahí el fondo es claro: hereda el color de texto
+   normal para no quedar en 1,06:1 de contraste. */
+.tabla-propiedades thead th {
   color: white;
+}
+
+.tabla-propiedades th {
   text-align: left;
   font-family: var(--font-display);
   font-weight: 600;
   font-size: 0.9375rem;
   padding: var(--space-sm) var(--space-md);
+}
+
+.tabla-propiedades tbody th {
+  color: var(--color-tinta);
+  border-bottom: 1px solid var(--color-borde);
+  vertical-align: middle;
+}
+
+.tabla-propiedades tbody tr:last-child th {
+  border-bottom: none;
 }
 
 .tabla-propiedades td {
@@ -562,7 +588,7 @@ textarea:focus-visible {
 }
 
 .precio-tabla {
-  color: var(--color-ocre);
+  color: var(--color-ocre-texto);
   font-weight: 700;
   white-space: nowrap;
 }
@@ -657,7 +683,7 @@ textarea:focus-visible {
 }
 
 .producto-precio {
-  color: var(--color-ocre);
+  color: var(--color-ocre-texto);
   font-family: var(--font-display);
   font-size: 2rem;
   font-weight: 700;
@@ -745,7 +771,7 @@ textarea:focus-visible {
 }
 
 .card-servicio h3 {
-  color: var(--color-tierra);
+  color: var(--color-tierra-texto);
   margin-bottom: var(--space-sm);
 }
 
@@ -915,7 +941,7 @@ textarea:focus-visible {
 
 .producto-opcion-info p:last-child {
   font-size: 0.8125rem;
-  color: var(--color-ocre);
+  color: var(--color-ocre-texto);
   font-weight: 700;
 }
 
@@ -968,7 +994,7 @@ textarea:focus-visible {
 
 .footer-copy {
   font-size: 0.875rem;
-  color: var(--color-musgo);
+  color: var(--color-musgo-sobre-selva);
   margin-top: var(--space-sm);
 }
 
@@ -990,7 +1016,7 @@ textarea:focus-visible {
 }
 
 .nav-saludo strong {
-  color: var(--color-ocre);
+  color: var(--color-ocre-texto);
 }
 
 .btn-link {
@@ -1005,7 +1031,7 @@ textarea:focus-visible {
   cursor: pointer;
 }
 .btn-link:hover {
-  color: var(--color-ocre);
+  color: var(--color-ocre-texto);
 }
 
 /* Pestañas Ingresar / Crear cuenta */
@@ -1032,7 +1058,7 @@ textarea:focus-visible {
   color: var(--color-tinta);
 }
 .auth-tab.is-activa {
-  color: var(--color-tierra);
+  color: var(--color-tierra-texto);
   border-bottom-color: var(--color-tierra);
 }
 
@@ -1048,7 +1074,7 @@ textarea:focus-visible {
 .campo-error {
   min-height: 1.1em;
   font-size: 0.8125rem;
-  color: var(--color-tierra);
+  color: var(--color-tierra-texto);
   font-weight: 600;
 }
 
@@ -1104,7 +1130,7 @@ textarea:focus-visible {
   margin-bottom: var(--space-sm);
 }
 .aviso-cuenta a {
-  color: var(--color-tierra);
+  color: var(--color-tierra-texto);
   font-weight: 700;
   text-decoration: underline;
 }
@@ -1162,6 +1188,8 @@ textarea:focus-visible {
   --color-tinta: #ECE6D8;
   --color-ocre: #DDA24C;
   --color-tierra: #C4532F;
+  --color-ocre-texto: #DDA24C;   /* 7.01:1 sobre papel oscuro */
+  --color-tierra-texto: #E76237; /* 4.65:1 sobre papel oscuro */
   --color-tierra-oscuro: #A63C1E;
   --color-musgo: #A2ADA4;
   --color-borde: #363D36;
@@ -1226,7 +1254,7 @@ body,
 }
 .btn-tema:hover {
   border-color: var(--color-ocre);
-  color: var(--color-ocre);
+  color: var(--color-ocre-texto);
 }
 
 .main-nav {
@@ -1285,7 +1313,7 @@ body,
   color: var(--color-musgo);
 }
 .galeria-estado.is-error {
-  color: var(--color-tierra);
+  color: var(--color-tierra-texto);
   font-weight: 600;
 }
 
@@ -1556,4 +1584,278 @@ body,
   }
 
   section { padding: var(--space-lg) var(--space-sm); }
+}
+
+/* =====================================================================
+   AE4 / TIFAS — ESTILOS PROPIOS DE LA SPA
+   Todo lo de arriba viene del maquetado de la AE1 y del Startup Relámpago.
+   Esta sección agrega solamente lo que la aplicación de una sola página
+   necesitó: vistas, salto al contenido, panel del agente y utilidades de
+   accesibilidad.
+   ===================================================================== */
+
+/* ---------------------------------------------------------------------
+   Enlace de salto al contenido (WCAG 2.1, criterio 2.4.1 Evitar bloques)
+   Está fuera de la pantalla hasta que recibe el foco con Tab.
+   --------------------------------------------------------------------- */
+.salto-contenido {
+  position: absolute;
+  top: -100px;
+  left: var(--space-sm);
+  z-index: 100;
+  padding: 0.6rem 1rem;
+  background-color: var(--color-papel);
+  color: var(--color-tinta);
+  border: 2px solid var(--color-selva);
+  border-radius: var(--radius);
+  font-weight: 700;
+  transition: top 0.15s ease-in-out;
+}
+
+.salto-contenido:focus {
+  top: var(--space-sm);
+}
+
+/* ---------------------------------------------------------------------
+   Texto sólo para lectores de pantalla.
+   No se usa display:none porque eso lo saca del árbol de accesibilidad y
+   el lector tampoco lo leería.
+   --------------------------------------------------------------------- */
+.solo-lectores {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* ---------------------------------------------------------------------
+   Vistas del router
+   Cada <section class="vista"> se muestra u oculta con el atributo hidden.
+   El padding lo ponen las secciones internas, no el contenedor.
+   --------------------------------------------------------------------- */
+.vista {
+  padding: 0;
+}
+
+/* .catalogo pasó de <section> a <div>, así que necesita su propio espaciado */
+.catalogo {
+  padding: var(--space-xl) var(--space-md);
+}
+
+/* El título de cada vista recibe el foco al navegar: sin outline fijo,
+   pero visible cuando se llega con el teclado */
+.vista h1:focus {
+  outline: none;
+}
+
+.vista h1:focus-visible {
+  outline: 3px solid var(--color-ocre);
+  outline-offset: 4px;
+}
+
+.contacto-acciones {
+  margin-top: var(--space-sm);
+}
+
+.producto-descripcion {
+  margin-top: var(--space-sm);
+}
+
+/* ---------------------------------------------------------------------
+   Formularios: grilla de tres columnas y casillas de verificación
+   --------------------------------------------------------------------- */
+.form-grid-3 {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0 var(--space-sm);
+}
+
+.form-casillas {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+  margin: var(--space-sm) 0;
+}
+
+.casilla {
+  display: flex;
+  align-items: center;
+  gap: var(--space-xs);
+  font-weight: 500;
+  cursor: pointer;
+  /* Alto mínimo cómodo para tocar en celular */
+  min-height: 44px;
+}
+
+.casilla input[type="checkbox"] {
+  width: 20px;
+  height: 20px;
+  accent-color: var(--color-selva);
+  margin: 0;
+}
+
+.productos-fieldset {
+  border: 1px solid var(--color-borde);
+  border-radius: var(--radius);
+  padding: var(--space-sm);
+  margin: var(--space-sm) 0;
+}
+
+.productos-fieldset legend {
+  font-family: var(--font-display);
+  font-weight: 600;
+  padding: 0 var(--space-xs);
+}
+
+/* ---------------------------------------------------------------------
+   Panel del agente
+   --------------------------------------------------------------------- */
+.panel-bloque {
+  background-color: var(--color-papel);
+  border: 1px solid var(--color-borde);
+  border-radius: var(--radius);
+  padding: var(--space-md);
+  margin-bottom: var(--space-lg);
+}
+
+.panel-bloque > h2 {
+  margin-bottom: var(--space-sm);
+}
+
+.panel-form-acciones {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-xs);
+  margin-top: var(--space-sm);
+}
+
+/* Fila de carga de una foto: ruta + texto alternativo */
+.fila-foto {
+  display: grid;
+  grid-template-columns: max-content 1fr max-content 1fr max-content;
+  align-items: center;
+  gap: var(--space-xs);
+  padding: var(--space-xs) 0;
+  border-bottom: 1px dashed var(--color-borde);
+}
+
+.fila-foto label {
+  font-size: 0.8125rem;
+  font-weight: 600;
+  white-space: nowrap;
+  margin: 0;
+}
+
+.fila-foto input {
+  margin: 0;
+}
+
+.celda-acciones {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-xs);
+}
+
+.celda-contacto {
+  display: flex;
+  flex-direction: column;
+  font-size: 0.875rem;
+}
+
+.lista-compacta {
+  margin: 0;
+  padding-left: 1.1rem;
+  font-size: 0.875rem;
+}
+
+.lista-compacta li {
+  list-style: disc;
+}
+
+.select-estado {
+  padding: 0.35rem 0.5rem;
+  border: 1px solid var(--color-borde);
+  border-radius: var(--radius);
+  background-color: var(--color-papel);
+  color: var(--color-tinta);
+  font-family: var(--font-body);
+  min-height: 40px;
+}
+
+/* Estado de publicación en la tabla del panel */
+.badge-tabla--baja {
+  background-color: var(--color-error-fondo);
+  color: var(--color-tierra-texto);
+}
+
+/* Botón de acción destructiva. El color de fondo es el tierra oscuro,
+   que con texto blanco da 8,4:1 de contraste. */
+.btn-peligro {
+  background-color: var(--color-tierra-oscuro);
+  color: #FFFFFF;
+  border: 2px solid var(--color-tierra-oscuro);
+}
+
+.btn-peligro:hover {
+  background-color: var(--color-tierra);
+  border-color: var(--color-tierra);
+}
+
+/* ---------------------------------------------------------------------
+   Responsive de lo agregado
+   --------------------------------------------------------------------- */
+@media (max-width: 900px) {
+  .form-grid-3 {
+    grid-template-columns: 1fr;
+  }
+
+  .fila-foto {
+    grid-template-columns: 1fr;
+    align-items: stretch;
+  }
+
+  .fila-foto label {
+    white-space: normal;
+  }
+}
+
+@media (max-width: 640px) {
+  .panel-bloque {
+    padding: var(--space-sm);
+  }
+
+  .celda-acciones {
+    flex-direction: column;
+  }
+}
+
+/* ---------------------------------------------------------------------
+   Preferencia de movimiento reducido (WCAG 2.1, criterio 2.3.3)
+   --------------------------------------------------------------------- */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Variantes del panel en modo oscuro */
+.tema-oscuro .panel-bloque {
+  background-color: var(--color-arena);
+}
+
+.tema-oscuro .btn-peligro {
+  background-color: var(--color-tierra);
+  border-color: var(--color-tierra);
+  color: #1C1A15;
 }

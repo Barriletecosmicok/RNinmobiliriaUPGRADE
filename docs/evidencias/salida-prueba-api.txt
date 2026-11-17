@@ -1,0 +1,176 @@
+=====================================================================
+ PRUEBAS DE LA API REST — RN Inmobiliaria AE4
+ Base: http://localhost:8080/api     Fecha: 12/11/2026 23:48
+=====================================================================
+
+--- 1. CATÁLOGO PÚBLICO (UC1, UC2, UC3) ---------------------------
+OK    [01] GET catálogo completo                                     esperado 200 / obtenido 200
+      {"ok":true,"propiedades":[{"id":1,"slug":"villa-sarita","titulo":"Casa 3 ambientes con pileta en Villa Sarita","tipo":"casa","barrio":"Villa Sarita, Posadas","precio":85000,"superficie":120,"ambientes":3,"descripcion":"Casa de tres ambientes con pileta, galería y garage cubierto en Villa Sarita.","destacada":true,"activa":true,"fotos":[{"id":1,"ruta":"img/casa-villa-sarita-dormitorio.png","texto_alt":"Dormitorio pri
+
+OK    [02] GET catálogo filtrado por tipo casa                       esperado 200 / obtenido 200
+      {"ok":true,"propiedades":[{"id":1,"slug":"villa-sarita","titulo":"Casa 3 ambientes con pileta en Villa Sarita","tipo":"casa","barrio":"Villa Sarita, Posadas","precio":85000,"superficie":120,"ambientes":3,"descripcion":"Casa de tres ambientes con pileta, galería y garage cubierto en Villa Sarita.","destacada":true,"activa":true,"fotos":[{"id":1,"ruta":"img/casa-villa-sarita-dormitorio.png","texto_alt":"Dormitorio pri
+
+OK    [03] GET tipo inexistente -> 400                                esperado 400 / obtenido 400
+      {"ok":false,"mensaje":"El tipo de propiedad solicitado no existe."}
+
+OK    [04] GET ficha de la propiedad 1                                esperado 200 / obtenido 200
+      {"ok":true,"propiedad":{"id":1,"slug":"villa-sarita","titulo":"Casa 3 ambientes con pileta en Villa Sarita","tipo":"casa","barrio":"Villa Sarita, Posadas","precio":85000,"superficie":120,"ambientes":3,"descripcion":"Casa de tres ambientes con pileta, galería y garage cubierto en Villa Sarita.","destacada":true,"activa":true,"fotos":[{"id":1,"ruta":"img/casa-villa-sarita-dormitorio.png","texto_alt":"Dormitorio princi
+
+OK    [05] GET ficha inexistente -> 404                               esperado 404 / obtenido 404
+      {"ok":false,"mensaje":"No encontramos esa propiedad."}
+
+OK    [06] GET id no numérico -> 400                                 esperado 400 / obtenido 400
+      {"ok":false,"mensaje":"El id de la propiedad no es válido."}
+
+--- 2. CONTROL DE ACCESO ANÓNIMO (OWASP A01) ---------------------
+OK    [07] GET sesión sin login (autenticado:false)                  esperado 200 / obtenido 200
+      {"ok":true,"autenticado":false}
+
+OK    [08] GET favoritos sin sesión -> 401                           esperado 401 / obtenido 401
+      {"ok":false,"mensaje":"Necesitás iniciar sesión para acceder a este recurso."}
+
+OK    [09] POST solicitud sin sesión -> 401                          esperado 401 / obtenido 401
+      {"ok":false,"mensaje":"Necesitás iniciar sesión para acceder a este recurso."}
+
+OK    [10] POST alta de propiedad sin sesión -> 401                  esperado 401 / obtenido 401
+      {"ok":false,"mensaje":"Necesitás iniciar sesión para acceder a este recurso."}
+
+OK    [11] DELETE propiedad sin sesión -> 401                        esperado 401 / obtenido 401
+      {"ok":false,"mensaje":"Necesitás iniciar sesión para acceder a este recurso."}
+
+OK    [12] GET listado del panel sin sesión -> 401                   esperado 401 / obtenido 401
+      {"ok":false,"mensaje":"Necesitás iniciar sesión para acceder a este recurso."}
+
+--- 3. AUTENTICACIÓN (UC7, OWASP A02 / A07) --------------------
+OK    [13] POST login con contraseña incorrecta -> 401               esperado 401 / obtenido 401
+      {"ok":false,"mensaje":"El e-mail o la contraseña no son correctos."}
+
+OK    [14] POST login con e-mail inexistente -> 401                   esperado 401 / obtenido 401
+      {"ok":false,"mensaje":"El e-mail o la contraseña no son correctos."}
+
+OK    [15] POST login sin datos -> 400                                esperado 400 / obtenido 400
+      {"ok":false,"mensaje":"Completá el e-mail y la contraseña."}
+
+OK    [16] POST login con JSON roto -> 400                            esperado 400 / obtenido 400
+      {"ok":false,"mensaje":"El cuerpo de la petición no es un JSON válido."}
+
+--- 4. INTENTO DE INYECCIÓN SQL (OWASP A03) ----------------------
+OK    [17] Login con "' OR '1'='1" en el e-mail -> 401                esperado 401 / obtenido 401
+      {"ok":false,"mensaje":"El e-mail o la contraseña no son correctos."}
+
+OK    [18] Login con comentario SQL -> 401                            esperado 401 / obtenido 401
+      {"ok":false,"mensaje":"El e-mail o la contraseña no son correctos."}
+
+OK    [19] Ficha con DROP TABLE en el id -> 400                       esperado 400 / obtenido 400
+      {"ok":false,"mensaje":"El id de la propiedad no es válido."}
+
+--- 5. SESIÓN DEL CLIENTE (UC7, UC8, UC4) ------------------
+OK    [20] POST login correcto de Ana (cliente)                       esperado 200 / obtenido 200
+      {"ok":true,"usuario":{"id":1,"nombre":"Ana Benítez","email":"ana@rninmobiliaria.com","rol":"cliente"}}
+
+OK    [21] GET sesión con cookie de Ana                              esperado 200 / obtenido 200
+      {"ok":true,"autenticado":true,"usuario":{"id":1,"nombre":"Ana Benítez","email":"ana@rninmobiliaria.com","rol":"cliente"},"favoritos":[1]}
+
+OK    [22] GET favoritos de Ana                                       esperado 200 / obtenido 200
+      {"ok":true,"favoritos":[{"id":1,"slug":"villa-sarita","titulo":"Casa 3 ambientes con pileta en Villa Sarita","tipo":"casa","barrio":"Villa Sarita, Posadas","precio":85000,"superficie":120,"ambientes":3}],"ids":[1]}
+
+OK    [23] POST favorito propiedad 3                                  esperado 201 / obtenido 201
+      {"ok":true,"mensaje":"Propiedad agregada a favoritos.","ids":[3,1]}
+
+OK    [24] POST el mismo favorito otra vez -> 200                     esperado 200 / obtenido 200
+      {"ok":true,"mensaje":"Ya estaba en favoritos.","ids":[3,1]}
+
+OK    [25] POST favorito de propiedad inexistente -> 404              esperado 404 / obtenido 404
+      {"ok":false,"mensaje":"Esa propiedad no está disponible."}
+
+OK    [26] DELETE favorito propiedad 3                                esperado 200 / obtenido 200
+      {"ok":true,"mensaje":"Propiedad quitada de favoritos.","ids":[1]}
+
+OK    [27] DELETE favorito que no estaba -> 404                       esperado 404 / obtenido 404
+      {"ok":false,"mensaje":"Esa propiedad no estaba entre tus favoritos."}
+
+OK    [28] POST solicitud de compra válida                           esperado 201 / obtenido 201
+      {"ok":true,"solicitud_id":1,"mensaje":"Recibimos tu solicitud. Nos vamos a contactar a la brevedad."}
+
+OK    [29] POST solicitud sin propiedades -> 400                      esperado 400 / obtenido 400
+      {"ok":false,"mensaje":"Revisá los datos del formulario.","campos":{"propiedades":"Elegí al menos una propiedad."}}
+
+OK    [30] POST solicitud con medio de pago inválido -> 400          esperado 400 / obtenido 400
+      {"ok":false,"mensaje":"Revisá los datos del formulario.","campos":{"medio_pago":"Elegí un medio de pago de la lista."}}
+
+OK    [31] GET solicitudes propias de Ana                             esperado 200 / obtenido 200
+      {"ok":true,"solicitudes":[{"id":1,"nombre":"Ana Benítez","telefono":"+54 9 376 4170186","direccion":"Av. Uruguay 1200, Villa Sarita","email":"ana@rninmobiliaria.com","medio_pago":"transferencia","mensaje":"Quiero coordinar una visita.","estado":"pendiente","creado_en":"2026-11-12 23:48:03","propiedades":[{"id":1,"titulo":"Casa 3 ambientes con pileta en Villa Sarita"},{"id":3,"titulo":"Casa 2 plantas en Barrio Centro
+
+--- 6. CLIENTE INTENTANDO HACER DE AGENTE (403) ------------------
+OK    [32] POST alta de propiedad como cliente -> 403                 esperado 403 / obtenido 403
+      {"ok":false,"mensaje":"Tu cuenta no tiene permisos para esta operación."}
+
+OK    [33] DELETE propiedad como cliente -> 403                       esperado 403 / obtenido 403
+      {"ok":false,"mensaje":"Tu cuenta no tiene permisos para esta operación."}
+
+OK    [34] GET todas las solicitudes como cliente -> 403              esperado 403 / obtenido 403
+      {"ok":false,"mensaje":"Tu cuenta no tiene permisos para esta operación."}
+
+--- 7. CRUD DEL AGENTE (UC9) -----------------------------------
+OK    [35] POST login de Rodrigo (agente)                             esperado 200 / obtenido 200
+      {"ok":true,"usuario":{"id":2,"nombre":"Rodrigo Núñez","email":"rodrigo@rninmobiliaria.com","rol":"agente"}}
+
+OK    [36] GET listado del panel con las dadas de baja                esperado 200 / obtenido 200
+      {"ok":true,"propiedades":[{"id":1,"slug":"villa-sarita","titulo":"Casa 3 ambientes con pileta en Villa Sarita","tipo":"casa","barrio":"Villa Sarita, Posadas","precio":85000,"superficie":120,"ambientes":3,"descripcion":"Casa de tres ambientes con pileta, galería y garage cubierto en Villa Sarita.","destacada":true,"activa":true,"fotos":[{"id":1,"ruta":"img/casa-villa-sarita-dormitorio.png","texto_alt":"Dormitorio pri
+
+OK    [37] POST alta de propiedad nueva                               esperado 201 / obtenido 201
+      {"ok":true,"propiedad":{"id":4,"slug":"departamento-2-ambientes-en-villa-cabello","titulo":"Departamento 2 ambientes en Villa Cabello","tipo":"departamento","barrio":"Villa Cabello, Posadas","precio":48000,"superficie":55,"ambientes":2,"descripcion":"Departamento a estrenar con balcón.","destacada":false,"activa":true,"fotos":[{"id":11,"ruta":"img/casa-centro-living.png","texto_alt":"Living del departamento"}]}}
+
+OK    [38] POST alta con datos inválidos -> 400                      esperado 400 / obtenido 400
+      {"ok":false,"mensaje":"Revisá los datos de la propiedad.","campos":{"titulo":"El título debe tener entre 5 y 150 caracteres.","tipo":"El tipo debe ser casa, terreno, departamento o local.","barrio":"Indicá el barrio y la ciudad.","precio":"El precio debe ser un número mayor que cero.","superficie":"La superficie debe ser un número entero de metros cuadrados.","slug":"El identificador sólo admite minúsculas, n�
+
+OK    [39] POST alta con slug repetido -> 409                         esperado 409 / obtenido 409
+      {"ok":false,"mensaje":"Ya hay una propiedad con ese identificador.","campos":{"slug":"Identificador repetido."}}
+
+OK    [40] PUT modificación de la propiedad 4                        esperado 200 / obtenido 200
+      {"ok":true,"propiedad":{"id":4,"slug":"departamento-2-ambientes-en-villa-cabello","titulo":"Departamento 2 ambientes en Villa Cabello","tipo":"departamento","barrio":"Villa Cabello, Posadas","precio":51000,"superficie":55,"ambientes":2,"descripcion":"Precio actualizado.","destacada":true,"activa":true,"fotos":[{"id":12,"ruta":"img/casa-centro-living.png","texto_alt":"Living del departamento"}]}}
+
+OK    [41] PUT sobre un id inexistente -> 404                         esperado 404 / obtenido 404
+      {"ok":false,"mensaje":"No encontramos esa propiedad."}
+
+OK    [42] GET todas las solicitudes como agente                      esperado 200 / obtenido 200
+      {"ok":true,"solicitudes":[{"id":1,"nombre":"Ana Benítez","telefono":"+54 9 376 4170186","direccion":"Av. Uruguay 1200, Villa Sarita","email":"ana@rninmobiliaria.com","medio_pago":"transferencia","mensaje":"Quiero coordinar una visita.","estado":"pendiente","creado_en":"2026-11-12 23:48:03","propiedades":[{"id":1,"titulo":"Casa 3 ambientes con pileta en Villa Sarita"},{"id":3,"titulo":"Casa 2 plantas en Barrio Centro
+
+OK    [43] PATCH estado de la solicitud 1                             esperado 200 / obtenido 200
+      {"ok":true,"mensaje":"Estado actualizado.","id":1,"estado":"contactada"}
+
+OK    [44] PATCH con un estado inválido -> 400                       esperado 400 / obtenido 400
+      {"ok":false,"mensaje":"El estado debe ser pendiente, contactada o cerrada."}
+
+OK    [45] DELETE de la propiedad 4                                   esperado 200 / obtenido 200
+      {"ok":true,"mensaje":"Propiedad eliminada.","id":4}
+
+OK    [46] DELETE de la misma propiedad -> 404                        esperado 404 / obtenido 404
+      {"ok":false,"mensaje":"No encontramos esa propiedad."}
+
+--- 8. REGISTRO (UC6) ------------------------------------------
+OK    [47] POST registro con e-mail repetido -> 409                   esperado 409 / obtenido 409
+      {"ok":false,"mensaje":"Ya existe una cuenta con ese e-mail. Probá ingresar."}
+
+OK    [48] POST registro con contraseñas distintas -> 400            esperado 400 / obtenido 400
+      {"ok":false,"mensaje":"Revisá los datos del formulario.","campos":{"password2":"Las contraseñas no coinciden."}}
+
+OK    [49] POST registro con e-mail inválido -> 400                  esperado 400 / obtenido 400
+      {"ok":false,"mensaje":"Revisá los datos del formulario.","campos":{"email":"Ingresá un e-mail válido."}}
+
+OK    [50] POST registro válido                                      esperado 201 / obtenido 201
+      {"ok":true,"usuario":{"id":3,"nombre":"Santino Calamari","email":"santino.prueba@rninmobiliaria.com","rol":"cliente"}}
+
+--- 9. CIERRE DE SESIÓN ------------------------------------------
+OK    [51] POST logout de Ana                                         esperado 200 / obtenido 200
+      {"ok":true,"mensaje":"Sesión cerrada."}
+
+OK    [52] GET favoritos después del logout -> 401                   esperado 401 / obtenido 401
+      {"ok":false,"mensaje":"Necesitás iniciar sesión para acceder a este recurso."}
+
+OK    [53] GET con método no permitido -> 405                        esperado 405 / obtenido 405
+      {"ok":false,"mensaje":"Método HTTP no permitido en este recurso."}
+
+=====================================================================
+ FIN DE LAS PRUEBAS — 53 casos
+=====================================================================
