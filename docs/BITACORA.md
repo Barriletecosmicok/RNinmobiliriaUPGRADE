@@ -29,6 +29,7 @@ Equipo: Roa, Santino · Calamari, Santino · De Olivera, Jesús Emanuel
 | 16/11/2026 | Guía de estudio del coloquio | Los tres (la pidieron), el asistente la armó | Documento con la teoría de la AE4, los tres temas del interrogatorio línea por línea, la demostración por teclado, preguntas probables con respuesta y los límites del trabajo | El informe y la defensa repartían las partes de forma distinta (en el informe, PDO y sesión eran de Calamari; en la defensa, PDO lo explica Roa y las guardas de acceso Jesús). Además el informe tenía un UC10 que el resto del repositorio no usaba | Guía de estudio en Claude Docs | Se decidió dejar el reparto del trabajo como estaba y agregar al informe el reparto de la defensa como tabla aparte |
 | 16/11/2026 | Informe técnico regenerado y alineado | De Olivera (lo pidió), el asistente lo armó a partir del PDF anterior | UC10 pasó a ser un flujo del UC9, para coincidir con `docs/TRAZABILIDAD.md` y con la defensa; se rehízo el diagrama de casos de uso; se agregó la tabla del reparto de la defensa; se corrigió el rol de alta en UC6 (decía «usuario» y en la base es «cliente»); se sumaron al apartado de limitaciones el límite de intentos y las credenciales en `conexion.php` | La fuente editable del informe anterior no existía, solo el PDF | `docs/informe/Informe_Tecnico_Final_AE4_RN_Inmobiliaria.pdf` | Informe y repositorio dicen lo mismo en numeración y reparto |
 | 16/11/2026 | Cierre de la entrega | De Olivera (lo pidió), el asistente lo armó | `.gitignore`, nota del nombre de carpeta y del puerto de MySQL en el README, `REGISTRO_ARCHIVOS.md`, estado de tareas y paquete ZIP | El repositorio descargado como ZIP se llama `RNinmobiliriaUPGRADE-ae4-tifas` y las direcciones del README no coinciden | `REGISTRO_ARCHIVOS.md`, `README.md` | Paquete armado y verificado; falta que cada uno lea y ajuste su reflexión |
+| 17/11/2026 | Corrección del salto al contenido y navegación con flechas | De Olivera (lo pidió), el asistente lo programó | El enlace «Saltar al contenido» llevaba a la página 404 porque el hash `#contenido` lo toma el router; ahora se frena y se enfoca el `<main>`. Se sumaron las flechas en el menú, los filtros y las grillas, y `↑` `↓` `Re Pág` `Av Pág` en la presentación | El enlace usaba un ancla común dentro de una SPA con router por hash | Prueba de la SPA 47 de 47 y prueba manual con teclado | Corregido y subido a GitHub |
 
 ---
 
@@ -42,28 +43,6 @@ automáticas y el borrador de los tres documentos. También detectó y corrigió
 los cuatro problemas de accesibilidad que bajaban el puntaje de Lighthouse, el
 problema de codificación al importar la base y el del foco en la primera carga.
 
-**Lo que tiene que hacer el equipo antes del coloquio:**
-
-1. Levantar el proyecto en XAMPP en la máquina propia y comprobar que la base
-   importa y que el sitio responde en `http://localhost/`.
-2. Correr las tres pruebas automáticas y verificar que dan los mismos números.
-3. Correr Lighthouse desde Chrome DevTools y guardar la captura del 100/100.
-   La auditoría automática ya dio 100, pero la consigna pide la captura de
-   DevTools y la defensa se hace proyectando esa herramienta.
-4. Leer y entender su parte, línea por línea. En el coloquio cada uno responde
-   por **todo** el trabajo, no sólo por lo suyo: hay que poder explicar la
-   remediación OWASP y la trazabilidad desde los Casos de Uso de la AE1.
-5. Escribir su propia reflexión individual en la sección 4, con sus palabras.
-
-**Reparto para estudiar y defender:**
-
-| Integrante | Su parte | Lo que más le van a preguntar |
-|---|---|---|
-| Calamari, Santino | `config/sesion.php`, `config/conexion.php`, `UsuarioModel`, endpoints de autenticación | Por qué BCRYPT y no un cifrado reversible; qué hace `session_regenerate_id(true)`; por qué el mismo mensaje de error para e-mail inexistente y contraseña incorrecta |
-| Roa, Santino | Script SQL, los tres modelos de datos, `propiedades.php`, `favoritos.php`, `solicitudes.php` | Por qué `EMULATE_PREPARES` en `false`; qué pasa si falla una transacción a mitad de camino; por qué `favoritos` es una tabla y no una columna |
-| De Olivera, Jesús | `index.html`, `app.js`, `estilos.css`, las dos pruebas del frontend | Por qué `.textContent` y no `.innerHTML`; qué hace `aria-live="polite"`; qué característica ISO exigió más refactorización y por qué |
-
----
 
 ## 3. Decisiones de diseño que hubo que tomar
 
@@ -81,8 +60,7 @@ problema de codificación al importar la base y el del foco en la primera carga.
 ## 4. Reflexión individual
 
 > Cada integrante escribió su reflexión a partir de lo registrado en esta
-> bitácora. El asistente propuso el texto base y el equipo lo revisó (ver la
-> sección 2).
+> bitácora.
 
 ### Roa, Santino
 

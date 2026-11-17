@@ -1476,6 +1476,22 @@
        puede asignar un listener de entrada. Se escucha una sola vez acá y
        se identifica el origen del clic con closest(). */
     document.addEventListener('click', (evento) => {
+      /* Enlace "Saltar al contenido principal". No puede ser un ancla común
+         (href="#contenido"), porque en una SPA el hash lo usa el router y
+         "contenido" no es una vista: terminaba en la página 404. Se frena el
+         cambio de hash y se pasa el foco al <main> a mano. */
+      const salto = evento.target.closest('.salto-contenido');
+      if (salto) {
+        evento.preventDefault();
+        const principal = document.getElementById('contenido');
+        if (principal) {
+          principal.setAttribute('tabindex', '-1');
+          principal.focus();
+          principal.scrollIntoView({ block: 'start' });
+        }
+        return;
+      }
+
       const favorito = evento.target.closest('.btn-favorito');
       if (favorito) { alternarFavorito(favorito); return; }
 
@@ -1514,6 +1530,43 @@
     document.addEventListener('change', (evento) => {
       const select = evento.target.closest('.select-estado');
       if (select) cambiarEstadoSolicitud(select);
+    });
+
+    /* --- Navegación con las flechas del teclado ---------------------------
+       Se suma al Tab, no lo reemplaza. En el menú principal y en las barras de
+       filtros (role="toolbar") las flechas izquierda y derecha pasan al control
+       anterior o siguiente. En las grillas de tarjetas funcionan las cuatro
+       flechas. Inicio y Fin saltan al primero y al último. Las pestañas de
+       acceso, los campos de formulario y el visor de fotos tienen su propio
+       manejo de flechas y no se tocan. */
+    document.addEventListener('keydown', (evento) => {
+      if (evento.ctrlKey || evento.metaKey || evento.altKey || evento.shiftKey) return;
+      const origen = evento.target;
+      if (!origen || !origen.closest) return;
+      if (origen.closest('input, textarea, select, dialog[open], [role="tab"], [role="tablist"]')) return;
+
+      const pasos = { ArrowRight: 1, ArrowLeft: -1, ArrowDown: 1, ArrowUp: -1 };
+      const salto = evento.key === 'Home' ? 'inicio' : evento.key === 'End' ? 'fin' : null;
+      if (!(evento.key in pasos) && !salto) return;
+
+      const horizontal = evento.key === 'ArrowRight' || evento.key === 'ArrowLeft';
+      const grupo = origen.closest('.grid-propiedades')
+        || (horizontal || salto ? origen.closest('[role="toolbar"], nav') : null);
+      if (!grupo) return;
+
+      const controles = Array.from(grupo.querySelectorAll(
+        'a[href], button:not([disabled]), [tabindex]:not([tabindex="-1"])'
+      )).filter((el) => el.getClientRects().length > 0);
+      const actual = controles.indexOf(origen.closest('a[href], button, [tabindex]'));
+      if (actual === -1 || controles.length === 0) return;
+
+      let destino = actual;
+      if (salto === 'inicio') destino = 0;
+      else if (salto === 'fin') destino = controles.length - 1;
+      else destino = Math.max(0, Math.min(controles.length - 1, actual + pasos[evento.key]));
+
+      evento.preventDefault();
+      controles[destino].focus();
     });
 
     // --- Router ---

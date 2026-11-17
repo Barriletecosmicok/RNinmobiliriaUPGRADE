@@ -287,7 +287,14 @@ node docs/evidencias/auditar-accesibilidad.js
 
 La interfaz se opera completa con `Tab` y `Enter`, sin tocar el mouse.
 
-- El primer `Tab` cae en **Saltar al contenido principal**.
+- El primer `Tab` cae en **Saltar al contenido principal**. Ese enlace no es un
+  ancla común: un `href="#contenido"` chocaba con el router por hash y llevaba a
+  la página 404, así que `app.js` frena el cambio de hash y pasa el foco al
+  `<main>` a mano.
+- Las flechas del teclado también navegan, además del `Tab`: `←` `→` en el menú
+  principal y en las barras de filtros, las cuatro flechas en las grillas de
+  tarjetas, e `Inicio` y `Fin` para ir al primer y al último control. Las
+  pestañas de acceso y el visor de fotos ya tenían su manejo de flechas.
 - Todo control interactivo es un `<button>` o un `<a>` nativo. No hay un solo
   `<div>` con `click`.
 - El foco se ve siempre: `:focus-visible` dibuja un contorno ocre de 3 px.

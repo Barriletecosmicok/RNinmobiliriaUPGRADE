@@ -680,8 +680,10 @@
     if (estado.seccion === 'interrogatorio' && 'abc'.includes(k) && k.length === 1) {
       estado.tema = { a: 'mvc', b: 'owasp', c: 'iso' }[k]; pintarInterrogatorio(); return;
     }
-    if ((ev.key === 'ArrowRight' || ev.key === 'ArrowLeft') && estado.alMover && !(t && t.closest && (t.closest('.codigo') || t.closest('[role="tablist"]')))) {
-      estado.alMover(ev.key === 'ArrowRight' ? 1 : -1);
+    const avanza = ['ArrowRight', 'ArrowDown', 'PageDown'].includes(ev.key);
+    const retrocede = ['ArrowLeft', 'ArrowUp', 'PageUp'].includes(ev.key);
+    if ((avanza || retrocede) && estado.alMover && !(t && t.closest && t.closest('[role="tablist"]'))) {
+      estado.alMover(avanza ? 1 : -1);
       ev.preventDefault();
     }
   }
