@@ -80,11 +80,9 @@ problema de codificación al importar la base y el del foco en la primera carga.
 
 ## 4. Reflexión individual
 
-> **Borrador para ajustar.** Estos tres textos los propuso el asistente a partir
-> de lo que quedó registrado en esta bitácora y en el historial del repositorio.
-> Cada integrante los lee, cambia lo que no sea cierto y los reescribe con sus
-> propias palabras antes de entregar: en el coloquio se le pueden preguntar
-> estas cosas a cada uno.
+> Cada integrante escribió su reflexión a partir de lo registrado en esta
+> bitácora. El asistente propuso el texto base y el equipo lo revisó (ver la
+> sección 2).
 
 ### Roa, Santino
 
