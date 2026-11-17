@@ -252,10 +252,10 @@ window.DATOS = {
   "j_deleg": {
    "archivo": "public/js/app.js",
    "desde": 1475,
-   "hasta": 1511,
+   "hasta": 1527,
    "lenguaje": "js",
    "autor": "Jesus De Olivera",
-   "codigo": "       las tablas se crean DESPUÉS de cargar la página, así que no se les\n       puede asignar un listener de entrada. Se escucha una sola vez acá y\n       se identifica el origen del clic con closest(). */\n    document.addEventListener('click', (evento) => {\n      const favorito = evento.target.closest('.btn-favorito');\n      if (favorito) { alternarFavorito(favorito); return; }\n\n      const verFotos = evento.target.closest('[data-ver-fotos]');\n      if (verFotos) { abrirVisor(verFotos.dataset.verFotos); return; }\n\n      const editar = evento.target.closest('[data-editar]');\n      if (editar) {\n        const id = Number(editar.dataset.editar);\n        const propiedad = estado.propiedades.find((p) => Number(p.id) === id);\n        if (propiedad) {\n          cargarPropiedadEnFormulario(propiedad);\n        } else {\n          pedir(`propiedades.php?id=${id}`).then(({ cuerpo }) => {\n            if (cuerpo.ok) cargarPropiedadEnFormulario(cuerpo.propiedad);\n          });\n        }\n        return;\n      }\n\n      const eliminar = evento.target.closest('[data-eliminar]');\n      if (eliminar) { eliminarPropiedad(eliminar.dataset.eliminar, eliminar.dataset.titulo); return; }\n\n      const quitarFoto = evento.target.closest('[data-accion=\"quitar-foto\"]');\n      if (quitarFoto) {\n        const filas = $$('#prop-fotos .fila-foto');\n        if (filas.length > 1) {\n          quitarFoto.closest('.fila-foto').remove();\n        } else {\n          mostrarAviso('Dejá al menos una fila de foto; podés borrar su contenido.');\n        }\n      }\n    });"
+   "codigo": "       las tablas se crean DESPUÉS de cargar la página, así que no se les\n       puede asignar un listener de entrada. Se escucha una sola vez acá y\n       se identifica el origen del clic con closest(). */\n    document.addEventListener('click', (evento) => {\n      /* Enlace \"Saltar al contenido principal\". No puede ser un ancla común\n         (href=\"#contenido\"), porque en una SPA el hash lo usa el router y\n         \"contenido\" no es una vista: terminaba en la página 404. Se frena el\n         cambio de hash y se pasa el foco al <main> a mano. */\n      const salto = evento.target.closest('.salto-contenido');\n      if (salto) {\n        evento.preventDefault();\n        const principal = document.getElementById('contenido');\n        if (principal) {\n          principal.setAttribute('tabindex', '-1');\n          principal.focus();\n          principal.scrollIntoView({ block: 'start' });\n        }\n        return;\n      }\n\n      const favorito = evento.target.closest('.btn-favorito');\n      if (favorito) { alternarFavorito(favorito); return; }\n\n      const verFotos = evento.target.closest('[data-ver-fotos]');\n      if (verFotos) { abrirVisor(verFotos.dataset.verFotos); return; }\n\n      const editar = evento.target.closest('[data-editar]');\n      if (editar) {\n        const id = Number(editar.dataset.editar);\n        const propiedad = estado.propiedades.find((p) => Number(p.id) === id);\n        if (propiedad) {\n          cargarPropiedadEnFormulario(propiedad);\n        } else {\n          pedir(`propiedades.php?id=${id}`).then(({ cuerpo }) => {\n            if (cuerpo.ok) cargarPropiedadEnFormulario(cuerpo.propiedad);\n          });\n        }\n        return;\n      }\n\n      const eliminar = evento.target.closest('[data-eliminar]');\n      if (eliminar) { eliminarPropiedad(eliminar.dataset.eliminar, eliminar.dataset.titulo); return; }\n\n      const quitarFoto = evento.target.closest('[data-accion=\"quitar-foto\"]');\n      if (quitarFoto) {\n        const filas = $$('#prop-fotos .fila-foto');\n        if (filas.length > 1) {\n          quitarFoto.closest('.fila-foto').remove();\n        } else {\n          mostrarAviso('Dejá al menos una fila de foto; podés borrar su contenido.');\n        }\n      }\n    });"
   },
   "c_conexion": {
    "archivo": "config/conexion.php",
@@ -1410,6 +1410,30 @@ window.DATOS = {
    "autor": "Jesus De Olivera",
    "fecha": "16/11/2026",
    "titulo": "feat(defensa): presentacion segun la dinamica del coloquio oral"
+  },
+  {
+   "hash": "ecfea5c",
+   "autor": "Jesus De Olivera",
+   "fecha": "16/11/2026",
+   "titulo": "refactor(defensa): version corta, menos texto y mas demostracion"
+  },
+  {
+   "hash": "d8fdf3f",
+   "autor": "Jesus De Olivera",
+   "fecha": "17/11/2026",
+   "titulo": "docs: informe alineado con la defensa, reflexiones, registro de archivos y .gitignore"
+  },
+  {
+   "hash": "2eb86bb",
+   "autor": "Jesus De Olivera",
+   "fecha": "17/11/2026",
+   "titulo": "docs: bitacora y estado de tareas listos para entregar"
+  },
+  {
+   "hash": "5ab9d05",
+   "autor": "Jesucristo23",
+   "fecha": "17/11/2026",
+   "titulo": "Update BITACORA.md"
   }
  ],
  "lighthouse": [
