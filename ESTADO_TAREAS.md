@@ -2,7 +2,7 @@
 
 Proyecto: RN Inmobiliaria · Paradigmas y Lenguajes de Programación III · UCP Posadas
 Equipo: **Roa, Santino** · **Calamari, Santino** · **De Olivera, Jesús Emanuel**
-Última actualización: 12/11/2026
+Última actualización: 16/11/2026
 
 Reparto por continuidad con la AE2: Calamari sigue con seguridad y sesión
 (era su Opción 4 con VSDM), De Olivera sigue con la interfaz (era su Opción 6
@@ -30,22 +30,26 @@ con OOHDM) y Roa toma la base de datos y el CRUD, que es la parte nueva.
 | 18 | Matriz de trazabilidad UC → endpoints → tablas | Calamari | Terminada | `docs/TRAZABILIDAD.md` |
 | 19 | Ficha de autoevaluación ISO/IEC 25010 | Roa | Terminada | `docs/AUDITORIA-ISO-25010.md` |
 | 20 | README con el despliegue en XAMPP | De Olivera | Terminada | `README.md` |
-| 21 | Bitácora del equipo | Los tres | **En curso** | `docs/BITACORA.md` |
-| 22 | Reflexión individual de cada integrante | Cada uno | **Pendiente** | `docs/BITACORA.md`, sección 4 |
+| 21 | Bitácora del equipo | Los tres | Terminada | `docs/BITACORA.md` |
+| 22 | Reflexión individual de cada integrante | Cada uno | **Borrador listo: cada uno la ajusta con sus palabras** | `docs/BITACORA.md`, sección 4 |
 | 23 | Verificar Lighthouse en la máquina del equipo | Los tres | **Pendiente** | Captura para el informe |
-| 24 | Informe técnico final en PDF | Los tres | **Pendiente** | Capítulos 1, 2 y 3 |
+| 24 | Informe técnico final en PDF | Los tres | Terminada (v2, alineada con la defensa) | `docs/informe/Informe_Tecnico_Final_AE4_RN_Inmobiliaria.pdf` |
 | 25 | Presentación interactiva (herramienta de defensa) | De Olivera | **Lista (v3: estructura del coloquio)** | `defensa/` |
-| 25b | Guion de práctica y guía de estudio del coloquio | Los tres | **Pendiente** | Documentos aparte |
-| 26 | Paquete .ZIP para el Campus Virtual | Los tres | **Pendiente** | Código más `.sql` |
+| 25b | Guía de estudio del coloquio | Los tres | Terminada | Documento aparte (Claude Docs) |
+| 26 | Paquete .ZIP para el Campus Virtual | Los tres | Armado, falta el OK del equipo | `RN_Inmobiliaria_AE4_entrega.zip` |
+| 27 | Registro de archivos y `.gitignore` | De Olivera | Terminada | `REGISTRO_ARCHIVOS.md`, `.gitignore` |
+
+## Reparto de la defensa
+
+Además del reparto del trabajo (arriba), en el coloquio cada uno explica una
+parte distinta para cubrir los tres temas de la consigna. La tabla completa está
+en el informe, sección «Reparto del trabajo», y en `README.md`.
 
 ## Lo que falta y de quién depende
 
-- **Roa:** estudiar el CRUD y la persistencia línea por línea, y escribir su
-  reflexión individual.
-- **Calamari:** estudiar la remediación OWASP (BCRYPT, `$_SESSION`, PDO
-  preparado) línea por línea, y escribir su reflexión individual.
-- **De Olivera:** correr Lighthouse en Chrome DevTools sobre la máquina que se
-  va a usar en el coloquio y guardar la captura del 100/100, y escribir su
-  reflexión individual.
-- **Los tres:** el informe en PDF y la práctica de la demostración por teclado,
-  que es lo primero que se evalúa en la defensa.
+- **Los tres:** leer la reflexión individual de `docs/BITACORA.md` (sección 4),
+  corregirla con sus palabras y dar el OK a la lista de archivos del ZIP.
+- **Los tres:** probar la demostración por teclado en la máquina del coloquio,
+  con la base recién importada, y guardar la captura de Lighthouse en DevTools.
+- **Antes de subir a GitHub:** el historial tiene 14 commits de De Olivera y 7 de
+  cada uno de los otros dos. La consigna pide una distribución equitativa.

@@ -116,6 +116,12 @@ C:\xampp\htdocs\RNinmobiliriaUPGRADE\
 En Linux o macOS la ruta suele ser `/opt/lampp/htdocs/` o
 `/Applications/XAMPP/htdocs/`.
 
+> Si descargaste el repositorio como ZIP desde GitHub, la carpeta se llama
+> `RNinmobiliriaUPGRADE-ae4-tifas`. Podés dejarla así, pero entonces todas las
+> direcciones de este README (`http://localhost/RNinmobiliriaUPGRADE/...`)
+> cambian a `http://localhost/RNinmobiliriaUPGRADE-ae4-tifas/...`. Lo más
+> simple es renombrarla a `RNinmobiliriaUPGRADE`.
+
 ### 2. Arrancar Apache y MySQL
 
 Abrí el **XAMPP Control Panel** y tocá **Start** en `Apache` y en `MySQL`.
@@ -154,6 +160,10 @@ Si tu MySQL de XAMPP tiene contraseña para `root`, abrí
 private const USUARIO = 'root';
 private const CLAVE   = '';     // poné acá la contraseña si configuraste una
 ```
+
+Si tu MySQL no corre en el puerto 3306 (por ejemplo, porque ya tenías otro
+MySQL instalado y XAMPP usa el 3307), cambiá también la constante `PUERTO`
+en el mismo archivo.
 
 ### 5. Abrir el sitio
 
@@ -340,3 +350,8 @@ Las decimos nosotros antes de que las encuentre la cátedra:
 5. **Las imágenes pesan.** Los PNG del catálogo vienen de la AE1 y rondan los
    2 MB cada uno. No afecta la auditoría de accesibilidad, pero sí al puntaje
    de Rendimiento de Lighthouse.
+6. **Sin límite de intentos de ingreso.** El login no frena un ataque de fuerza
+  bruta; hay que agregarlo antes de publicar.
+7. **Credenciales de la base escritas en `config/conexion.php`.** Es el usuario
+  `root` sin contraseña de XAMPP. Para publicar el sitio hay que moverlas a
+  variables de entorno.
